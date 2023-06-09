@@ -1,0 +1,23 @@
+FROM python:3 AS builder
+
+RUN pip3 install --upgrade pip
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-template.git /template
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-sdk /sdk
+RUN cp -rf /sdk/examples/seat-adjuster/* /template/app/
+WORKDIR /template
+RUN curl -L https://github.com/eclipse-velocitas/cli/releases/latest/download/velocitas-linux-x64 -o /usr/bin/velocitas
+RUN chmod +x /usr/bin/velocitas
+RUN velocitas init
+#RUN velocitas sync
+RUN pip3 install -r ./requirements.txt
+RUN pip3 install -r ./app/requirements-links.txt
+RUN pip3 install -r ./app/requirements.txt
+RUN pip3 install -r ./app/tests/requirements.txt
+RUN pip3 install --no-cache-dir ./gen/vehicle_model
+RUN git config --global --add safe.directory $(pwd)
+WORKDIR /template/app
+RUN pyinstaller --clean -F -s src/main.py
+
+FROM python:3
+COPY --from=builder /template/app/dist/ /dist
+ENTRYPOINT [ "python3", "/dist/main.py" ]
