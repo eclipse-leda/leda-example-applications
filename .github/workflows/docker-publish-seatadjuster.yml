@@ -1,12 +1,9 @@
 name: Seat Adjuster
 
 on:
-  schedule:
-    - cron: '21 5 1 * *'
+  workflow_dispatch:
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,7 +12,6 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}/leda-example-seat-adjuster
-
 
 jobs:
   build:
