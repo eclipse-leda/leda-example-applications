@@ -14,7 +14,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}/leda-seatadjuster
+  IMAGE_NAME: ${{ github.repository }}/leda-example-seat-adjuster
 
 
 jobs:
@@ -69,13 +69,14 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
-          context: https://github.com/eclipse-velocitas/vehicle-app-python-sdk.git#main:examples/seat-adjuster
-          push: ${{ github.event_name != 'pull_request' }}
+          context: .
+          file: Dockerfile.seat-adjuster
+          push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

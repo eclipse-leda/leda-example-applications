@@ -1,0 +1,47 @@
+FROM ghcr.io/eclipse-velocitas/devcontainer-base-images/python:v0.1.2 as builder
+
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-template.git /template
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-sdk /sdk
+RUN cp -rf /sdk/examples/seat-adjuster/* /template/app/
+
+WORKDIR /template
+RUN velocitas init
+RUN velocitas sync
+RUN pip3 install --upgrade pip
+RUN pip3 install -r ./requirements.txt
+RUN pip3 install -r ./app/requirements-links.txt
+RUN pip3 install -r ./app/requirements.txt
+RUN pip3 install -r ./app/tests/requirements.txt
+RUN pip3 install --no-cache-dir pyinstaller==5.9.0
+RUN pip3 install --no-cache-dir patchelf==0.17.0.0
+RUN pip3 install --no-cache-dir staticx
+RUN pip3 install --no-cache-dir ./gen/vehicle_model
+RUN git config --global --add safe.directory $(pwd)
+RUN apt-get -y update
+RUN apt-get -y install binutils python3-dev
+RUN /bin/bash -c 'set -ex && \
+    ARCH=`uname -m` && \
+    if [ "$ARCH" == "aarch64" ]; then \
+    echo "ARM64" && \
+    apt-get install -y gcc && \
+    pip3 install --no-cache-dir scons; \
+    fi'
+
+WORKDIR /template/app
+
+RUN pyinstaller --clean -F -s src/main.py
+
+WORKDIR /template/app/dist
+
+RUN staticx main run-exe
+
+# Runner stage, to copy the executable
+FROM scratch
+
+COPY --from=builder ./template/app/dist/run-exe /dist/
+
+WORKDIR /dist
+
+ENV PATH="/dist:$PATH"
+VOLUME [ "/tmp" ]
+CMD ["./run-exe"]
