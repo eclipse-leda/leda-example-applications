@@ -1,24 +1,11 @@
 FROM ghcr.io/eclipse-velocitas/devcontainer-base-images/python:v0.1.2 as builder
 
-RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-template.git /template
-RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-sdk /sdk
-RUN cp -rf /sdk/examples/seat-adjuster/* /template/app/
-
-WORKDIR /template
-RUN velocitas init
-RUN velocitas sync
-RUN pip3 install --upgrade pip
-RUN pip3 install -r ./requirements.txt
-RUN pip3 install -r ./app/requirements-links.txt
-RUN pip3 install -r ./app/requirements.txt
-RUN pip3 install -r ./app/tests/requirements.txt
-RUN pip3 install --no-cache-dir pyinstaller==5.9.0
-RUN pip3 install --no-cache-dir patchelf==0.17.0.0
-RUN pip3 install --no-cache-dir staticx
-RUN pip3 install --no-cache-dir ./gen/vehicle_model
-RUN git config --global --add safe.directory $(pwd)
 RUN apt-get -y update
 RUN apt-get -y install binutils python3-dev
+
+RUN pip3 install --upgrade pip
+
+# Remove this installation for Arm64 once staticx has a prebuilt wheel for Arm64
 RUN /bin/bash -c 'set -ex && \
     ARCH=`uname -m` && \
     if [ "$ARCH" == "aarch64" ]; then \
@@ -26,6 +13,24 @@ RUN /bin/bash -c 'set -ex && \
     apt-get install -y gcc && \
     pip3 install --no-cache-dir scons; \
     fi'
+
+RUN pip3 install --no-cache-dir pyinstaller==5.9.0
+RUN pip3 install --no-cache-dir patchelf==0.17.0.0
+RUN pip3 install --no-cache-dir staticx
+
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-template.git /template
+RUN git clone https://github.com/eclipse-velocitas/vehicle-app-python-sdk /sdk
+RUN cp -rf /sdk/examples/seat-adjuster/* /template/app/
+
+WORKDIR /template
+RUN velocitas init
+RUN velocitas sync
+RUN pip3 install -r ./requirements.txt
+RUN pip3 install -r ./app/requirements-links.txt
+RUN pip3 install -r ./app/requirements.txt
+RUN pip3 install -r ./app/tests/requirements.txt
+RUN pip3 install --no-cache-dir ./gen/vehicle_model
+RUN git config --global --add safe.directory $(pwd)
 
 WORKDIR /template/app
 
