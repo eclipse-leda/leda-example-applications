@@ -24,7 +24,7 @@ RUN cp -rf /sdk/examples/seat-adjuster/* /template/app/
 
 WORKDIR /template
 RUN velocitas init
-RUN velocitas sync
+# RUN velocitas sync
 RUN pip3 install -r ./requirements.txt
 RUN pip3 install -r ./app/requirements-links.txt
 RUN pip3 install -r ./app/requirements.txt
