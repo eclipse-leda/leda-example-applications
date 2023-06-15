@@ -1,0 +1,9 @@
+.vscode
+.venv
+__pycache__
+start_databroker
+*.egg*
+dist
+build
+*.spec
+*.tar
