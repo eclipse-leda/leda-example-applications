@@ -65,8 +65,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          context: ./driversim
-          file: ./driversim/Dockerfile
+          context: ./kuksa-carsim/driversim
+          file: ./kuksa-carsim/Dockerfile
           platforms: linux/amd64, linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
