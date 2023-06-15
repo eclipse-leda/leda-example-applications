@@ -5,15 +5,25 @@
 ## Usage
 
 These example applications are provided as Docker containers.
+
 The containers are used in Eclipse Leda quickstart image, which contains default container deployments descriptors for these examples.
 
-## Building
+## Contents
 
-Run `./build-docker.sh`
+### Seat Adjuster
+
+The **[Seat Adjuster](seat-adjuster/)** example is an [Eclipse Velocitas](https://github.com/eclipse-velocitas) vehicle application,
+interacting with an [Eclipse Kuksa.VAL](https://github.com/eclipse/kuksa.val) Vehicle Abstraction Layer (Databroker)
+to control the position of the **driver seat**. Actual implementation for the latter is a CAN-Bus-based *vehicle service* implementation
+as part of the [Kuksa.VAL Services examples](https://github.com/eclipse/kuksa.val.services/tree/main/seat_service).
+
+### Kuksa CarSim
+
+The **[Kuksa CarSim](kuksa-carsim)** example is based on [Kuksa.VAL Services](https://github.com/eclipse/kuksa.val.services/tree/main).
+It provides simulated physical motion telemetry of a moving vehicle to the [Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker).
+The databroker is an in-vehicle, in-memory database for signal information. Signal formats are standardized in the [Vehicle Signal Specification](https://github.com/COVESA/vehicle_signal_specification).
 
 ## Contributing
-
-Running BitBake to build your own images requires some extra setup on the build machine. Please see [Building Eclipse Leda quickstart images](https://eclipse-leda.github.io/leda/docs/build/) for more information about the build process itself and how to setup a development and build infrastructure.
 
 If you want to contribute bug reports or feature requests, please use *GitHub Issues*.
 For reporting security vulnerabilities, please follow our [security guideline](https://eclipse-leda.github.io/leda/docs/project-info/security/).
