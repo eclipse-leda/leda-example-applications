@@ -110,13 +110,13 @@ $ docker run -it --rm --net=host ghcr.io/eclipse/kuksa.val/databroker:master
 TERMINAL 2 (Carsim): 
 
 ```bash
-docker run --net=host -e "LOG_LEVEL=INFO" --rm -it ghcr.io/vasilvas99/carsim:main
+docker run --net=host -e "LOG_LEVEL=INFO" --rm -it ghcr.io/eclipse-leda/leda-example-carsim:main
 ```
 
 TERMINAL 3 (Driversim): 
 
 ```bash
-docker run --net=host -e "LOG_LEVEL=INFO" --rm -it ghcr.io/vasilvas99/driversim:main
+docker run --net=host -e "LOG_LEVEL=INFO" --rm -it ghcr.io/eclipse-leda/leda-example-driversim:main
 ```
 
 
@@ -140,13 +140,13 @@ $ docker run --name databroker_cont --network sim-net --rm -it ghcr.io/eclipse/k
 3) Run the car simulator
 
 ```bash
-$ docker run --name simulator  --network sim-net -e "LOG_LEVEL=INFO" -e "DATABROKER_ADDRESS=databroker_cont:55555" --rm -it ghcr.io/vasilvas99/carsim:main
+$ docker run --name simulator  --network sim-net -e "LOG_LEVEL=INFO" -e "DATABROKER_ADDRESS=databroker_cont:55555" --rm -it ghcr.io/eclipse-leda/leda-example-carsim:main
 ```
 
 4) Run the driver simulator 
 
 ```bash
-$ docker run --name driver  --network sim-net -e "LOG_LEVEL=INFO" -e "DATABROKER_ADDRESS=databroker_cont:55555" --rm -it ghcr.io/vasilvas99/driversim:main
+$ docker run --name driver  --network sim-net -e "LOG_LEVEL=INFO" -e "DATABROKER_ADDRESS=databroker_cont:55555" --rm -it ghcr.io/eclipse-leda/leda-example-driversim:main
 ```
 
 ## Building the containers locally

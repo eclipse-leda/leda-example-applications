@@ -22,7 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONTEXT_DIR="$SCRIPT_DIR"
 # name of docker image: ${DOCKER_ARCH)/${DOCKER_IMAGE}
 DOCKER_IMAGE="carsim"
-REGISTRY="ghcr.io/vasilvas99/kuksa-carsim"
+REGISTRY="ghcr.io/eclipse-leda/leda-example-applications"
 
 print_usage() {
 	echo "USAGE: $0 [OPTIONS] TARGETS"

@@ -2,7 +2,7 @@
     "container_id": "driversimservice-example",
     "container_name": "driversimservice-example",
     "image": {
-        "name": "ghcr.io/vasilvas99/driversim:main"
+        "name": "ghcr.io/eclipse-leda/leda-example-driversim:main"
     },
     "host_config": {
         "devices": [],
