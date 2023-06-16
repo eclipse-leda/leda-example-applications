@@ -25,7 +25,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/leda-example-driversim
+  IMAGE_NAME: ${{ github.repository }}/leda-example-driversim
   
 jobs:
   build-driversim-service-image:
