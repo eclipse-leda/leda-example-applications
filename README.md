@@ -8,6 +8,13 @@ These example applications are provided as Docker containers.
 
 The containers are used in Eclipse Leda quickstart image, which contains default container deployments descriptors for these examples.
 
+**General Runtime Requirements:**
+
+Most of the applications are supposed to run in the Leda environment. If you want to run the examples standalone, the following services and configuration must be provided externally:
+
+- Kuksa.VAL [Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker) running on `databroker:55555`
+- Eclipse Mosquitto running on `mosquitto:1883` with `allow_anonymous: true`
+
 ## Contents
 
 ### Seat Adjuster
@@ -17,11 +24,28 @@ interacting with an [Eclipse Kuksa.VAL](https://github.com/eclipse/kuksa.val) Ve
 to control the position of the **driver seat**. Actual implementation for the latter is a CAN-Bus-based *vehicle service* implementation
 as part of the [Kuksa.VAL Services examples](https://github.com/eclipse/kuksa.val.services/tree/main/seat_service).
 
+**Additional Runtime Requirements:**
+
+- Kuksa.VAL Seat Service
+
+```shell
+docker run -it --rm ghcr.io/eclipse-leda/leda-example-applications/leda-example-seat-adjuster:main
+```
+
 ### Kuksa CarSim
 
 The **[Kuksa CarSim](kuksa-carsim)** example is based on [Kuksa.VAL Services](https://github.com/eclipse/kuksa.val.services/tree/main).
 It provides simulated physical motion telemetry of a moving vehicle to the [Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker).
 The databroker is an in-vehicle, in-memory database for signal information. Signal formats are standardized in the [Vehicle Signal Specification](https://github.com/COVESA/vehicle_signal_specification).
+
+**Additional Runtime Requirements:**
+
+- None
+
+```shell
+docker run -it --rm ghcr.io/eclipse-leda/leda-example-applications/leda-example-carsim:main
+docker run -it --rm ghcr.io/eclipse-leda/leda-example-applications/leda-example-driversim:main
+```
 
 ## Contributing
 
