@@ -15,10 +15,6 @@ name: Seat Adjuster
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/docker-publish-seatadjuster.yml"
-      - "seat-adjuster/**"
   pull_request:
     paths:
       - ".github/workflows/docker-publish-seatadjuster.yml"
