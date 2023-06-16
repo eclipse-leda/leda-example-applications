@@ -1,3 +1,6 @@
+[![Build](https://github.com/eclipse-leda/leda-example-applications/actions/workflows/build.yml/badge.svg)](https://github.com/eclipse-leda/leda-example-applications/actions/workflows/build.yml)
+[![CodeQL](https://github.com/eclipse-leda/leda-example-applications/workflows/CodeQL/badge.svg)](https://github.com/eclipse-leda/leda-example-applications/actions?query=workflow%3ACodeQL)
+
 <img src="https://eclipse-leda.github.io/leda/assets/eclipse-leda.png" height="150">
 
 # Eclipse Leda Incubator - Example Vehicle Applications
