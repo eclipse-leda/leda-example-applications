@@ -9,7 +9,11 @@
 
 These example applications are provided as Docker containers.
 
-The containers are used in Eclipse Leda quickstart image, which contains default container deployments descriptors for these examples.
+The containers are meant to be used in Eclipse Leda quickstart image, which contains default container deployments descriptors for these examples.
+Please see [meta-leda/meta-leda-components/recipes-sdv/eclipse-leda/kanto-containers/example](https://github.com/eclipse-leda/meta-leda/tree/main/meta-leda-components/recipes-sdv/eclipse-leda/kanto-containers/example) for details.
+
+However, it is possible to run the containers also in a standalone environment using Docker or other OCI compliant container runtimes.
+The environment has to be adapted accordingly, e.g. external dependencies need to be installed or run in Docker and configured.
 
 **General Runtime Requirements:**
 
