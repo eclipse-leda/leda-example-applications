@@ -2,7 +2,7 @@
     "container_id": "carsimservice-example",
     "container_name": "carsimservice-example",
     "image": {
-        "name": "ghcr.io/eclipse-leda/leda-example-carsim:main"
+        "name": "ghcr.io/eclipse-leda/leda-example-applications/leda-example-carsim:main"
     },
     "host_config": {
         "devices": [],
