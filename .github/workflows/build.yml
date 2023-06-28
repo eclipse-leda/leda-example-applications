@@ -25,3 +25,6 @@ jobs:
     uses: ./.github/workflows/docker-build-publish-driversim.yml
   seatadjuster:
     uses: ./.github/workflows/docker-build-publish-seatadjuster.yml
+  rpi-sim7600:
+    uses: ./.github/workflows/docker-build-publish-rpi-sim7600.yml
+  
