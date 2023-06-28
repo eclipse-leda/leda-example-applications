@@ -1,3 +1,4 @@
+#!/bin/bash
 # /********************************************************************************
 # * Copyright (c) 2023 Contributors to the Eclipse Foundation
 # *
@@ -6,25 +7,9 @@
 # *
 # * This program and the accompanying materials are made available under the
 # * terms of the Apache License 2.0 which is available at
-# * http://www.apache.org/licenses/LICENSE-2.0
+# * https://www.apache.org/licenses/LICENSE-2.0
 # *
 # * SPDX-License-Identifier: Apache-2.0
 # ********************************************************************************/
 
-name: Build
-
-on:
-  workflow_dispatch:
-  push:
-  pull_request:
-
-jobs:
-  carsim:
-    uses: ./.github/workflows/docker-build-publish-carsim.yml
-  driversim:
-    uses: ./.github/workflows/docker-build-publish-driversim.yml
-  seatadjuster:
-    uses: ./.github/workflows/docker-build-publish-seatadjuster.yml
-  rpi-sim7600:
-    uses: ./.github/workflows/docker-build-publish-rpi-sim7600.yml
-  
+docker run -it --rm ghcr.io/eclipse-leda/leda-example-applications/leda-example-sim7600x:latest

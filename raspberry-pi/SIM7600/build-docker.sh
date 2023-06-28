@@ -1,3 +1,4 @@
+#!/bin/bash
 # /********************************************************************************
 # * Copyright (c) 2023 Contributors to the Eclipse Foundation
 # *
@@ -6,25 +7,21 @@
 # *
 # * This program and the accompanying materials are made available under the
 # * terms of the Apache License 2.0 which is available at
-# * http://www.apache.org/licenses/LICENSE-2.0
+# * https://www.apache.org/licenses/LICENSE-2.0
 # *
 # * SPDX-License-Identifier: Apache-2.0
 # ********************************************************************************/
+#
+# Build examples using Docker BuildX
+#
+# Setup:
+# - sudo apt-get install -y qemu-user-static
+# - sudo apt-get install -y binfmt-support
+# - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+# - docker buildx rm ledabuilder
+# - docker buildx create --name ledabuilder --use
 
-name: Build
-
-on:
-  workflow_dispatch:
-  push:
-  pull_request:
-
-jobs:
-  carsim:
-    uses: ./.github/workflows/docker-build-publish-carsim.yml
-  driversim:
-    uses: ./.github/workflows/docker-build-publish-driversim.yml
-  seatadjuster:
-    uses: ./.github/workflows/docker-build-publish-seatadjuster.yml
-  rpi-sim7600:
-    uses: ./.github/workflows/docker-build-publish-rpi-sim7600.yml
-  
+docker build \
+    --tag ghcr.io/eclipse-leda/leda-example-applications/leda-example-sim7600x:latest \
+    --progress plain \
+    .
