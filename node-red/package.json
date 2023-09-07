@@ -1,0 +1,14 @@
+{
+    "name": "sdv-node-red-examples",
+    "version": "0.0.1",
+    "description": "SDV example setup for node-RED",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "node-red": "3.0.2",
+        "node-red-dashboard": "3.6.0"
+    }
+}
