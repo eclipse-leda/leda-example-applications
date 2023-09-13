@@ -5,7 +5,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "",
+    "author": "leda-dev@eclipse.org",
     "license": "Apache-2.0",
     "dependencies": {
         "node-red": "3.0.2",
