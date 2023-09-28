@@ -1,0 +1,959 @@
+[
+    {
+        "id": "8893ce2e3bcd6415",
+        "type": "tab",
+        "label": "Connections",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bdd28665bfe7cc3e",
+        "type": "tab",
+        "label": "Leda Status",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "df00f52c34ea8f47",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "544891f94013761e",
+        "type": "subflow",
+        "name": "topic filter",
+        "info": "## MQTT Topic filter\n\n### Description\nFilters messages based on the value of `msg.topic` using standard MQTT topic filter notation.\n* `#` match all\n* `+` match one level\n\n### example filters\n* `home/+/temperature` \n  * will match `home/bedroom/temperature`\n  * will match `home/livingroom/temperature`\n  * will not match `home/room/1/temperature`\n  * will not match `room/1/temperature`\n* `home/#` \n  * will match `home/location`\n  * will match `home/livingroom/temperature`\n  * will match `home/livingroom/humidity`\n  * will not match `room/1/temperature`\n\n\n### Outputs\n\n#### Output 1 - match\nMessages with a topic that matches the `topic filter` will be sent out this output.\n\n#### Output 2 - no match\nMessages with a topic that does not match the `topic filter` will be sent out this output to permit next level filtering\n",
+        "category": "function",
+        "in": [
+            {
+                "x": 68,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 340,
+                "y": 48,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 340,
+                "y": 96,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22",
+                        "port": 1
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "filter",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Topic filter"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "status",
+                "type": "bool",
+                "value": "true",
+                "ui": {
+                    "label": {
+                        "en-US": "Show topic"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "bool"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "type": "mqtt-topic-filter",
+            "version": "1.0.0",
+            "author": "steve-mcl",
+            "desc": "A node to filter MQTT topics",
+            "keywords": "mqtt",
+            "license": "MIT"
+        },
+        "color": "#D8BFD8",
+        "outputLabels": [
+            "Match",
+            "No Match"
+        ],
+        "icon": "font-awesome/fa-filter",
+        "status": {
+            "x": 548,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "a9453c972b2e207a",
+                    "port": 0
+                },
+                {
+                    "id": "3f82486996b3cfd5",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "b1b3032b9f41f38c",
+        "type": "subflow",
+        "name": "currentstate - list",
+        "info": "",
+        "category": "function",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "5ca0c68c699fe867"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 720,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "e39adf356d1d037b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "fb585e7f0dd51cfd",
+        "type": "mqtt-broker",
+        "name": "leda-mqtt",
+        "broker": "${MQTT_ADDR}",
+        "port": "${MQTT_PORT}",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6bcbe8d24d01e15f",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#1f77b4",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#1f77b4",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#1f77b4",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#419ede",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#1f77b4",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "31b9a607bd7cffa4",
+        "type": "ui_tab",
+        "name": "Leda Status",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "853f626a78b514a7",
+        "type": "ui_group",
+        "name": "Self Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 1,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a17b70ba881ce441",
+        "type": "ui_group",
+        "name": "Containers Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 2,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5d06f71eb2d78bfd",
+        "type": "ui_group",
+        "name": "Vehicle Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 3,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1ef13f666f02eb22",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "filter",
+        "func": "var a = msg.topic;\nvar b = env.get(\"filter\") || '#';\n\nif(a===b) { return [msg, null]; }\nif(b==='#') { \n    if(a) return [msg, null]; //if topic is something, OK\n    return [null, msg];//otherwise, fail!\n}\nvar nameSegments = a.split('/');\nvar filterSegments = b.split('/');\nfor (var i = 0; i < filterSegments.length; i++) {\n    var topicSegment = nameSegments[i];\n    var patternSegment = filterSegments[i];\n    var match = false;\n    if(topicSegment === patternSegment) { match = true; }\n    if(patternSegment === '+') { match = true; }\n    if(patternSegment === '#') {  return [msg, null]; }\n    if(match === false) { return [null, msg]; }\n}\nif(nameSegments.length !== filterSegments.length) { return [null, msg]; }\n\nreturn [msg, null];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 192,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d55c5c0a665fdcc9",
+        "type": "inject",
+        "z": "544891f94013761e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 148,
+        "y": 160,
+        "wires": [
+            [
+                "be5346c60d2899c1"
+            ]
+        ]
+    },
+    {
+        "id": "a9453c972b2e207a",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "",
+        "func": "var b = env.get(\"filter\") || '#';\nnode.status({text:b})\nmsg.payload = b;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 428,
+        "y": 144,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be5346c60d2899c1",
+        "type": "switch",
+        "z": "544891f94013761e",
+        "name": "",
+        "property": "status",
+        "propertyType": "env",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 290,
+        "y": 160,
+        "wires": [
+            [
+                "a9453c972b2e207a"
+            ],
+            [
+                "3f82486996b3cfd5"
+            ]
+        ]
+    },
+    {
+        "id": "3f82486996b3cfd5",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "",
+        "func": "node.status({})\ndelete msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 428,
+        "y": 192,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ca0c68c699fe867",
+        "type": "split",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "283cd6e88e8ad3d3"
+            ]
+        ]
+    },
+    {
+        "id": "b029b52f6c2b4a24",
+        "type": "join",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "mode": "auto",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": "false",
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "x": 470,
+        "y": 60,
+        "wires": [
+            [
+                "e39adf356d1d037b"
+            ]
+        ]
+    },
+    {
+        "id": "283cd6e88e8ad3d3",
+        "type": "function",
+        "z": "b1b3032b9f41f38c",
+        "name": "function",
+        "func": "const icons = {\n    IMAGE: \"fa-cube\",\n    APPLICATION: \"fa-cogs\",\n    CONTAINER: \"cloud\",\n    _IMAGE: \"📦\",\n    _APPLICATION: \"⚙️\",\n    _CONTAINER: \"\"\n}\nconst payload = {\n    title: msg.payload.name,\n    description: `${msg.payload.id}<br>${msg.payload.version}`,\n    icon_name: icons[msg.payload.type] || \"fa-question\",\n    _id: msg.payload.id,\n    _version: msg.payload.version,\n    _name: msg.payload.name,\n    _type: msg.payload.type\n}\nmsg.payload = payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "b029b52f6c2b4a24"
+            ]
+        ]
+    },
+    {
+        "id": "e39adf356d1d037b",
+        "type": "sort",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "order": "ascending",
+        "as_num": false,
+        "target": "payload",
+        "targetType": "msg",
+        "msgKey": "$lowercase(title ? title : description)",
+        "msgKeyType": "jsonata",
+        "seqKey": "payload",
+        "seqKeyType": "msg",
+        "x": 610,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1877c8b9e075b7d8",
+        "type": "mqtt in",
+        "z": "8893ce2e3bcd6415",
+        "name": "leda-mqtt in",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "fb585e7f0dd51cfd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "18110494fbac6fc6",
+                "cac87b1838e0d8f6"
+            ]
+        ]
+    },
+    {
+        "id": "05a4bf55c32bc4e6",
+        "type": "mqtt out",
+        "z": "8893ce2e3bcd6415",
+        "name": "leda-mqtt out",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "fb585e7f0dd51cfd",
+        "x": 290,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "19655fb9c907d1e2",
+        "type": "link in",
+        "z": "8893ce2e3bcd6415",
+        "name": "MQTT Out",
+        "links": [
+            "54347d4ec1cab856"
+        ],
+        "x": 55,
+        "y": 200,
+        "wires": [
+            [
+                "05a4bf55c32bc4e6"
+            ]
+        ]
+    },
+    {
+        "id": "18110494fbac6fc6",
+        "type": "link out",
+        "z": "8893ce2e3bcd6415",
+        "name": "MQTT in",
+        "mode": "link",
+        "links": [
+            "3661535da85e7507",
+            "81f02c69f246394f"
+        ],
+        "x": 235,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "cac87b1838e0d8f6",
+        "type": "debug",
+        "z": "8893ce2e3bcd6415",
+        "name": "mqtt payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ee9b28a56f9b8b38",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "853f626a78b514a7",
+        "name": "Self Update Status",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 870,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "bdc66b589cb4230c",
+        "type": "switch",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "selfupdate/currentstate",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "containersupdate/currentstate",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "vehicleupdate/currentstate",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 250,
+        "y": 60,
+        "wires": [
+            [
+                "37e9b18dafd41294"
+            ],
+            [
+                "0b26a6aace74d46f"
+            ],
+            [
+                "d8fbf20d86790ee4"
+            ]
+        ]
+    },
+    {
+        "id": "37e9b18dafd41294",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "9d62962c43ae669b"
+            ]
+        ]
+    },
+    {
+        "id": "0b26a6aace74d46f",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 120,
+        "wires": [
+            [
+                "20e819c71a01bd69"
+            ]
+        ]
+    },
+    {
+        "id": "9d62962c43ae669b",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 660,
+        "y": 60,
+        "wires": [
+            [
+                "ee9b28a56f9b8b38"
+            ]
+        ]
+    },
+    {
+        "id": "ec97b77461b25d15",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "a17b70ba881ce441",
+        "name": "Containers Update",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 870,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "20e819c71a01bd69",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 660,
+        "y": 120,
+        "wires": [
+            [
+                "ec97b77461b25d15"
+            ]
+        ]
+    },
+    {
+        "id": "d8fbf20d86790ee4",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 180,
+        "wires": [
+            [
+                "ce7d39da84e78b9b"
+            ]
+        ]
+    },
+    {
+        "id": "1c958cc219a01f7e",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "5d06f71eb2d78bfd",
+        "name": "Vehicle Update",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 860,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ce7d39da84e78b9b",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 660,
+        "y": 180,
+        "wires": [
+            [
+                "1c958cc219a01f7e"
+            ]
+        ]
+    },
+    {
+        "id": "0ed9e753be801df6",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Self Update State",
+        "group": "853f626a78b514a7",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "selfupdate/currentstate/get",
+        "topicType": "str",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "de937bc070e0acda",
+        "type": "function",
+        "z": "bdd28665bfe7cc3e",
+        "name": "build ua msg",
+        "func": "msg.payload = {\n    activityId: uuid.v1(),\n    timestamp: Date.now(),\n    payload: msg.payload || {}\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "uuid",
+                "module": "uuid"
+            }
+        ],
+        "x": 450,
+        "y": 260,
+        "wires": [
+            [
+                "54347d4ec1cab856"
+            ]
+        ]
+    },
+    {
+        "id": "a6f6ef030e3d147a",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Containers Update State",
+        "group": "a17b70ba881ce441",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "containersupdate/currentstate/get",
+        "topicType": "str",
+        "x": 160,
+        "y": 320,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "06b842f31c04e61b",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Vehicle Update State",
+        "group": "5d06f71eb2d78bfd",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "vehicleupdate/currentstate/get",
+        "topicType": "str",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "3661535da85e7507",
+        "type": "link in",
+        "z": "bdd28665bfe7cc3e",
+        "name": "MQTT in 1",
+        "links": [
+            "18110494fbac6fc6"
+        ],
+        "x": 100,
+        "y": 60,
+        "wires": [
+            [
+                "bdc66b589cb4230c"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "54347d4ec1cab856",
+        "type": "link out",
+        "z": "bdd28665bfe7cc3e",
+        "name": "MQTT out 1",
+        "mode": "link",
+        "links": [
+            "19655fb9c907d1e2"
+        ],
+        "x": 850,
+        "y": 260,
+        "wires": [],
+        "l": true
+    }
+]

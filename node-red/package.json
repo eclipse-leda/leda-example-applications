@@ -9,6 +9,10 @@
     "license": "Apache-2.0",
     "dependencies": {
         "node-red": "3.0.2",
-        "node-red-dashboard": "3.6.0"
+        "node-red-dashboard": "3.6.0",
+        "node-red-contrib-grpc": "1.2.5",
+        "node-red-contrib-uuid": "0.0.4",
+        "node-red-node-ui-list": "0.3.6",
+        "@node-red-contrib-themes/theme-collection": "3.1.2"
     }
 }
