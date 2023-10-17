@@ -432,7 +432,7 @@
     {
         "id": "f206c2b27c248139",
         "type": "subflow",
-        "name": "parse field",
+        "name": "select field",
         "info": "",
         "category": "SDV",
         "in": [
@@ -448,7 +448,7 @@
         ],
         "out": [
             {
-                "x": 430,
+                "x": 400,
                 "y": 40,
                 "wires": [
                     {
@@ -456,33 +456,25 @@
                         "port": 0
                     }
                 ]
-            },
-            {
-                "x": 430,
-                "y": 100,
-                "wires": [
-                    {
-                        "id": "fdb285d6f548d25e",
-                        "port": 1
-                    }
-                ]
             }
         ],
-        "env": [],
+        "env": [
+            {
+                "name": "signal",
+                "type": "str",
+                "value": ""
+            }
+        ],
         "meta": {},
         "color": "#E2D96E",
-        "outputLabels": [
-            "field",
-            "value"
-        ],
         "icon": "node-red/rbe.png",
         "status": {
             "x": 400,
-            "y": 160,
+            "y": 100,
             "wires": [
                 {
                     "id": "fdb285d6f548d25e",
-                    "port": 2
+                    "port": 1
                 }
             ]
         }
@@ -697,7 +689,7 @@
         "tab": "6766a5d8d8a377ed",
         "order": 1,
         "disp": false,
-        "width": "12",
+        "width": "6",
         "collapse": false,
         "className": ""
     },
@@ -1470,17 +1462,16 @@
         "id": "fdb285d6f548d25e",
         "type": "function",
         "z": "f206c2b27c248139",
-        "name": "parse field content",
-        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst signal_name = msg.topic\nconst field = msg.payload\n\nlet ret_msg = {\n    topic: signal_name,\n    payload: msg.payload\n}\n\nlet ret_value = {\n    topic: signal_name,\n    payload: null\n}\n\nlet status = null\n\n\nif (field) {\n    const value = field[field.value]\n\n    if (value === \"NOT_AVAILABLE\" || value === \"UNKNOWN_DATAPOINT\") {\n        ret_value = null\n        status = statusError\n    }\n    else {\n        ret_value.payload = value\n        status = statusOk\n    }\n}\nelse {\n    ret_value = null\n    status = statusError\n}\n\nreturn [ret_msg, ret_value, status]\n",
-        "outputs": 3,
+        "name": "select signal from fields",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst signal = env.get(\"signal\")\nconst field = msg.payload[signal]\n\nif (field) {\n\n    let value = field[field.value]\n\n    if (value !== \"NOT_AVAILABLE\" && value !== \"UNKNOWN_DATAPOINT\") {\n\n        msg.payload = {\n            signal: signal,\n            value: value,\n            timestamp: field.timestamp\n        }\n\n        return [msg, statusOk]\n    }\n}\n\nreturn [null, statusError]\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 210,
+        "x": 230,
         "y": 60,
         "wires": [
-            [],
             [],
             []
         ]
@@ -1490,7 +1481,7 @@
         "type": "subflow:f486fb61943eeb89",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 460,
+        "x": 480,
         "y": 60,
         "wires": [
             [
@@ -1569,7 +1560,7 @@
         "type": "subflow:d2f09c088927a668",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 680,
+        "x": 690,
         "y": 60,
         "wires": [
             [
@@ -1624,7 +1615,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 270,
+        "x": 290,
         "y": 60,
         "wires": [
             [
@@ -1651,7 +1642,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 270,
+        "x": 290,
         "y": 120,
         "wires": [
             [
@@ -1664,7 +1655,7 @@
         "type": "debug",
         "z": "df00f52c34ea8f47",
         "name": "databroker error",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1672,7 +1663,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 660,
+        "x": 680,
         "y": 120,
         "wires": []
     },
@@ -1681,11 +1672,11 @@
         "type": "subflow:4f41580d2b2e81cf",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 300,
+        "x": 360,
         "y": 260,
         "wires": [
             [
-                "4b836e3a267014ae"
+                "147df8ed194c901d"
             ],
             [
                 "ab5e03f2bf0485b2"
@@ -1696,7 +1687,7 @@
         "id": "27f000aa65bd8c17",
         "type": "inject",
         "z": "df00f52c34ea8f47",
-        "name": "Databroker Query",
+        "name": "",
         "props": [
             {
                 "p": "payload"
@@ -1709,7 +1700,7 @@
         "topic": "",
         "payload": "SELECT Vehicle.Speed",
         "payloadType": "str",
-        "x": 130,
+        "x": 140,
         "y": 260,
         "wires": [
             [
@@ -1721,7 +1712,7 @@
         "id": "147df8ed194c901d",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
+        "name": "Vehicle.Speed",
         "env": [
             {
                 "name": "signal",
@@ -1729,13 +1720,11 @@
                 "type": "str"
             }
         ],
-        "x": 770,
+        "x": 550,
         "y": 260,
         "wires": [
-            [],
             [
-                "ed41f34f4a925a32",
-                "53b8cdacd2594f26"
+                "7f356b7f1549eb7d"
             ]
         ]
     },
@@ -1746,12 +1735,12 @@
         "name": "",
         "group": "ff74e0831e03da9e",
         "order": 1,
-        "width": "6",
-        "height": "4",
+        "width": 0,
+        "height": 0,
         "gtype": "gage",
         "title": "Current Speed",
         "label": "km/h",
-        "format": "{{value | number:0}}",
+        "format": "{{value}}",
         "min": 0,
         "max": "250",
         "colors": [
@@ -1763,31 +1752,59 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 960,
+        "x": 900,
         "y": 260,
         "wires": []
     },
     {
-        "id": "53b8cdacd2594f26",
+        "id": "7f356b7f1549eb7d",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "get value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(msg.payload.value)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 260,
+        "wires": [
+            [
+                "ed41f34f4a925a32",
+                "30d4bab6ff8fdf01"
+            ]
+        ]
+    },
+    {
+        "id": "30d4bab6ff8fdf01",
         "type": "ui_chart",
         "z": "df00f52c34ea8f47",
         "name": "",
         "group": "ff74e0831e03da9e",
         "order": 2,
-        "width": "6",
-        "height": "4",
-        "label": "Speed History",
+        "width": 0,
+        "height": 0,
+        "label": "",
         "chartType": "line",
         "legend": "false",
         "xformat": "HH:mm:ss",
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
-        "ymin": "0",
-        "ymax": "250",
-        "removeOlder": 1,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "10",
         "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
+        "removeOlderUnit": "60",
         "cutout": 0,
         "useOneColor": false,
         "useUTC": false,
@@ -1805,54 +1822,10 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 960,
-        "y": 300,
+        "x": 890,
+        "y": 320,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "7bd2591a5e21c6e9",
-        "type": "switch",
-        "z": "df00f52c34ea8f47",
-        "name": "",
-        "property": "topic",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "Vehicle.Speed",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 610,
-        "y": 260,
-        "wires": [
-            [
-                "147df8ed194c901d"
-            ]
-        ]
-    },
-    {
-        "id": "4b836e3a267014ae",
-        "type": "split",
-        "z": "df00f52c34ea8f47",
-        "name": "",
-        "splt": "\\n",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "topic",
-        "x": 490,
-        "y": 260,
-        "wires": [
-            [
-                "7bd2591a5e21c6e9"
-            ]
         ]
     },
     {
