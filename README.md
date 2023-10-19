@@ -41,7 +41,7 @@ The databroker is an in-vehicle, in-memory database for signal information. Sign
 
 ### Node-RED
 
-*... TODO ...*
+The **[Node-RED](node-red/)** example presents some flows based on the [Node-RED](https://nodered.org/) programming environment to demonstrate how the various service running on a [Leda](https://eclipse-leda.github.io/) distribution can be accessed via a graphical user interface.
 
 ## Contributing
 
