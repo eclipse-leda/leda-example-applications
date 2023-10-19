@@ -434,7 +434,7 @@
     {
         "id": "2a90df8a197fb8f2",
         "type": "subflow",
-        "name": "SetDatapoints",
+        "name": "SetDatapoint",
         "info": "",
         "category": "SDV",
         "in": [
@@ -443,18 +443,26 @@
                 "y": 60,
                 "wires": [
                     {
-                        "id": "ac991528a3e27567"
+                        "id": "aa04a728ca96fca7"
                     }
                 ]
             }
         ],
         "out": [
             {
-                "x": 770,
-                "y": 60,
+                "x": 1090,
+                "y": 120,
                 "wires": [
                     {
-                        "id": "5f0eda38a2ac5bf3",
+                        "id": "c584248d8e09f50e",
+                        "port": 0
+                    },
+                    {
+                        "id": "11db319f92be5c46",
+                        "port": 0
+                    },
+                    {
+                        "id": "68aac2e6408be595",
                         "port": 0
                     }
                 ]
@@ -462,7 +470,7 @@
         ],
         "env": [],
         "meta": {
-            "module": "SetDatapoints",
+            "module": "SetDatapoint",
             "license": "Apache-2.0"
         },
         "color": "#5d8dab",
@@ -471,8 +479,8 @@
         ],
         "icon": "node-red-contrib-grpc/grpc.svg",
         "status": {
-            "x": 800,
-            "y": 120,
+            "x": 1120,
+            "y": 60,
             "wires": [
                 {
                     "id": "bbc19ba6b0c31177",
@@ -678,7 +686,7 @@
         "type": "ui_group",
         "name": "Simple Datapoint(s) Query",
         "tab": "cb4c0e56e5211151",
-        "order": 3,
+        "order": 1,
         "disp": true,
         "width": "12",
         "collapse": false,
@@ -775,6 +783,27 @@
         "order": 4,
         "width": "1",
         "height": "2"
+    },
+    {
+        "id": "efe3a0ea76c51e04",
+        "type": "ui_group",
+        "name": "Set Datapoint",
+        "tab": "cb4c0e56e5211151",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c7d41124ecdd2680",
+        "type": "ui_spacer",
+        "z": "df00f52c34ea8f47",
+        "name": "spacer",
+        "group": "0b2827de9e647c6b",
+        "order": 4,
+        "width": "12",
+        "height": "1"
     },
     {
         "id": "1ef13f666f02eb22",
@@ -1445,7 +1474,9 @@
         "y": 60,
         "wires": [
             [
-                "bbc19ba6b0c31177"
+                "bbc19ba6b0c31177",
+                "8140d535e5a00db8",
+                "e1ffb3d27d252101"
             ]
         ]
     },
@@ -1454,7 +1485,7 @@
         "type": "function",
         "z": "2a90df8a197fb8f2",
         "name": "SetDatapointsRequest",
-        "func": "let data = msg.payload\n\nif (typeof msg.payload === \"string\") {\n    data = msg.payload.replace(/\\s+/g, ' ').split(\" \")\n}\n\nmsg.payload = {\n    datapoints: data\n}\n\nreturn msg;\n\n// message SetDatapointsRequest {\n//     // A map of data points to set\n//     map < string, Datapoint > datapoints = 1;\n// }\n\n// message SetDatapointsReply {\n//     // A map of errors (if any)\n//     map < string, DatapointError > errors = 1;\n// }\n\n// message Datapoint {\n//     // Timestamp of the value\n//     google.protobuf.Timestamp timestamp = 1;\n\n//   // values\n//   oneof value {\n//     Failure failure_value = 10;\n//     string string_value = 11;\n//     bool bool_value = 12;\n//     sint32 int32_value = 13;\n//     sint64 int64_value = 14;\n//     uint32 uint32_value = 15;\n//     uint64 uint64_value = 16;\n//     float float_value = 17;\n//     double double_value = 18;\n//     StringArray string_array = 21;\n//     BoolArray bool_array = 22;\n//     Int32Array int32_array = 23;\n//     Int64Array int64_array = 24;\n//     Uint32Array uint32_array = 25;\n//     Uint64Array uint64_array = 26;\n//     FloatArray float_array = 27;\n//     DoubleArray double_array = 28;\n//     }\n\n//     enum Failure {\n//         // The data point is known, but doesn't have a valid value\n//         INVALID_VALUE = 0;\n//         // The data point is known, but no value is available\n//         NOT_AVAILABLE = 1;\n//         // Unknown datapoint\n//         UNKNOWN_DATAPOINT = 2;\n//         // Access denied\n//         ACCESS_DENIED = 3;\n//         // Unexpected internal error\n//         INTERNAL_ERROR = 4;\n//     }\n// }\n\n// enum DatapointError {\n//     UNKNOWN_DATAPOINT = 0;\n//     INVALID_TYPE = 1;\n//     ACCESS_DENIED = 2;\n//     INTERNAL_ERROR = 3;\n//     OUT_OF_BOUNDS = 4;\n// }\n",
+        "func": "const datapoints = {}\n\ndatapoints[msg.topic] = {\n    timestamp: new Date(),\n    value: msg.payload\n}\n\nmsg.payload = {\n    datapoints: datapoints\n}\n\nreturn msg\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1463,7 +1494,9 @@
         "x": 220,
         "y": 60,
         "wires": [
-            []
+            [
+                "5f0eda38a2ac5bf3"
+            ]
         ]
     },
     {
@@ -1471,35 +1504,201 @@
         "type": "function",
         "z": "2a90df8a197fb8f2",
         "name": "error",
-        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nmsg.payload = msg.error ? statusError : statusOk\nreturn msg\n",
-        "outputs": 1,
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst error = msg.error || msg.payload.errors\nconst status = error ? statusError : statusOk\n\nreturn [\n    { payload: status },\n    { payload: error }\n]\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 120,
+        "x": 670,
+        "y": 60,
+        "wires": [
+            [],
+            [
+                "6b5ab52b8b83f1fb"
+            ]
+        ]
+    },
+    {
+        "id": "8140d535e5a00db8",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 140,
+        "wires": [
+            [
+                "c584248d8e09f50e"
+            ]
+        ]
+    },
+    {
+        "id": "e1ffb3d27d252101",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "payload.errors",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 180,
+        "wires": [
+            [
+                "332bbae3a02c5b5c"
+            ]
+        ]
+    },
+    {
+        "id": "c584248d8e09f50e",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 140,
         "wires": [
             []
         ]
     },
     {
-        "id": "ac991528a3e27567",
+        "id": "332bbae3a02c5b5c",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.errors",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 180,
+        "wires": [
+            [
+                "0a4b18eac2507388"
+            ]
+        ]
+    },
+    {
+        "id": "0a4b18eac2507388",
+        "type": "split",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 970,
+        "y": 180,
+        "wires": [
+            [
+                "11db319f92be5c46"
+            ]
+        ]
+    },
+    {
+        "id": "11db319f92be5c46",
         "type": "function",
         "z": "2a90df8a197fb8f2",
         "name": "function 1",
-        "func": "// let data = msg.payload\n\n// if (typeof msg.payload === \"string\") {\n//     data = msg.payload.replace(/\\s+/g, ' ').split(\" \")\n// }\n\n// msg.payload = {\n//     datapoints: data\n// }\n\n\nmsg.payload = {\n    datapoints: {\n        \"Vehicle.CurrentLocation.Latitude\": {\n            timestamp: msg.timestamp,\n            value: 9.192222\n        },\n        \"Vehicle.CurrentLocation.Longitude\": {\n            timestamp: msg.timestamp,\n            value: 48.8975\n        },\n        \"Vehicle.Speed\": {\n            timestamp: msg.timestamp,\n            value: 123.45\n        }\n    }\n}\n\nreturn msg\n\n\n// message Datapoint {\n//     // Timestamp of the value\n//     google.protobuf.Timestamp timestamp = 1;\n\n//   // values\n//   oneof value {\n//     Failure failure_value = 10;\n//     string string_value = 11;\n//     bool bool_value = 12;\n//     sint32 int32_value = 13;\n//     sint64 int64_value = 14;\n//     uint32 uint32_value = 15;\n//     uint64 uint64_value = 16;\n//     float float_value = 17;\n//     double double_value = 18;\n//     StringArray string_array = 21;\n//     BoolArray bool_array = 22;\n//     Int32Array int32_array = 23;\n//     Int64Array int64_array = 24;\n//     Uint32Array uint32_array = 25;\n//     Uint64Array uint64_array = 26;\n//     FloatArray float_array = 27;\n//     DoubleArray double_array = 28;\n//     }\n\n//     enum Failure {\n//         // The data point is known, but doesn't have a valid value\n//         INVALID_VALUE = 0;\n//         // The data point is known, but no value is available\n//         NOT_AVAILABLE = 1;\n//         // Unknown datapoint\n//         UNKNOWN_DATAPOINT = 2;\n//         // Access denied\n//         ACCESS_DENIED = 3;\n//         // Unexpected internal error\n//         INTERNAL_ERROR = 4;\n//     }\n// }\n",
+        "func": "msg.payload = `${msg.key}: ${msg.payload}`\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 240,
-        "y": 280,
+        "x": 1100,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b5ab52b8b83f1fb",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 220,
         "wires": [
             [
-                "5f0eda38a2ac5bf3"
+                "68aac2e6408be595"
             ]
+        ]
+    },
+    {
+        "id": "68aac2e6408be595",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 220,
+        "wires": [
+            []
         ]
     },
     {
@@ -1556,7 +1755,7 @@
         "columns": [
             {
                 "field": "signal",
-                "title": "Signal",
+                "title": "Signal Name",
                 "width": "",
                 "align": "left",
                 "formatter": "plaintext",
@@ -2031,11 +2230,11 @@
         "type": "subflow:2a90df8a197fb8f2",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 290,
-        "y": 680,
+        "x": 630,
+        "y": 700,
         "wires": [
             [
-                "5fce8703c2ef1ef7"
+                "244d32831b583804"
             ]
         ]
     },
@@ -2057,33 +2256,16 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "",
-        "payload": "Vehicle.Speed",
+        "topic": "Vehicle.Speed",
+        "payload": "123.45",
         "payloadType": "str",
-        "x": 110,
-        "y": 680,
+        "x": 140,
+        "y": 700,
         "wires": [
             [
                 "f220d8ca3595f40f"
             ]
         ]
-    },
-    {
-        "id": "5fce8703c2ef1ef7",
-        "type": "debug",
-        "z": "df00f52c34ea8f47",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 480,
-        "y": 680,
-        "wires": []
     },
     {
         "id": "7d8aac4ef65fd16a",
@@ -2111,6 +2293,191 @@
                 "7d8aac4ef65fd16a"
             ]
         ]
+    },
+    {
+        "id": "665830ece00c82d6",
+        "type": "ui_button",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Set",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "send",
+        "payload": "set_datapoint_payload",
+        "payloadType": "flow",
+        "topic": "set_datapoint_topic",
+        "topicType": "flow",
+        "x": 90,
+        "y": 640,
+        "wires": [
+            [
+                "c6c7658543aee121"
+            ]
+        ]
+    },
+    {
+        "id": "e795cb05db09f7eb",
+        "type": "ui_text_input",
+        "z": "df00f52c34ea8f47",
+        "name": "signal",
+        "label": "Signal Name",
+        "tooltip": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 1,
+        "width": "12",
+        "height": "1",
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 90,
+        "y": 560,
+        "wires": [
+            [
+                "5cd8f2bd98d5bac5"
+            ]
+        ]
+    },
+    {
+        "id": "11ac5922f3112019",
+        "type": "ui_text_input",
+        "z": "df00f52c34ea8f47",
+        "name": "value",
+        "label": "Value",
+        "tooltip": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 2,
+        "width": "12",
+        "height": "1",
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 90,
+        "y": 600,
+        "wires": [
+            [
+                "ade502a8f5a25bbb"
+            ]
+        ]
+    },
+    {
+        "id": "5cd8f2bd98d5bac5",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "set_datapoint_topic",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ade502a8f5a25bbb",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "set_datapoint_payload",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c6c7658543aee121",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "set query",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "set_datapoint_payload",
+                "tot": "flow"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "set_datapoint_topic",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 640,
+        "wires": [
+            [
+                "f220d8ca3595f40f"
+            ]
+        ]
+    },
+    {
+        "id": "244d32831b583804",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "efe3a0ea76c51e04",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "set error",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 800,
+        "y": 700,
+        "wires": []
     },
     {
         "id": "7b1e0e7cf64109ab",
