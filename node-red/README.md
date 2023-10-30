@@ -18,8 +18,8 @@ Please see [meta-leda/meta-leda-components/recipes-sdv/eclipse-leda/kanto-contai
 
 ## Usage
 
-You can access the graphical user interface with any web browser on the port 1881, e.g. http://leda-host:1881/.
-The generated dashboard is available on http://leda-host:1881/ui/.
+You can access the graphical user interface with any web browser on the port 1880, e.g. http://leda-host:1880/.
+The generated dashboard is available on http://leda-host:1880/ui/.
 
 Describing how to use the UI is out of the scope of this document. Please consult the excellent [Node-RED documentation](https://nodered.org/docs/).
 
