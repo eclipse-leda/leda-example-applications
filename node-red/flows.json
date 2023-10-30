@@ -1,0 +1,3160 @@
+[
+    {
+        "id": "4cf5bc897925d109",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "df00f52c34ea8f47",
+        "type": "tab",
+        "label": "VSS",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7f2a49a791478fb0",
+        "type": "tab",
+        "label": "Seat Adjuster",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bdd28665bfe7cc3e",
+        "type": "tab",
+        "label": "Update Status",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8893ce2e3bcd6415",
+        "type": "tab",
+        "label": "Connections",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "544891f94013761e",
+        "type": "subflow",
+        "name": "topic filter",
+        "info": "## MQTT Topic filter\n\n### Description\nFilters messages based on the value of `msg.topic` using standard MQTT topic filter notation.\n* `#` match all\n* `+` match one level\n\n### example filters\n* `home/+/temperature` \n  * will match `home/bedroom/temperature`\n  * will match `home/livingroom/temperature`\n  * will not match `home/room/1/temperature`\n  * will not match `room/1/temperature`\n* `home/#` \n  * will match `home/location`\n  * will match `home/livingroom/temperature`\n  * will match `home/livingroom/humidity`\n  * will not match `room/1/temperature`\n\n\n### Outputs\n\n#### Output 1 - match\nMessages with a topic that matches the `topic filter` will be sent out this output.\n\n#### Output 2 - no match\nMessages with a topic that does not match the `topic filter` will be sent out this output to permit next level filtering\n",
+        "category": "function",
+        "in": [
+            {
+                "x": 68,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 340,
+                "y": 48,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 340,
+                "y": 96,
+                "wires": [
+                    {
+                        "id": "1ef13f666f02eb22",
+                        "port": 1
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "filter",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Topic filter"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "status",
+                "type": "bool",
+                "value": "true",
+                "ui": {
+                    "label": {
+                        "en-US": "Show topic"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "bool"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "type": "mqtt-topic-filter",
+            "version": "1.0.0",
+            "author": "steve-mcl",
+            "desc": "A node to filter MQTT topics",
+            "keywords": "mqtt",
+            "license": "MIT"
+        },
+        "color": "#D8BFD8",
+        "outputLabels": [
+            "Match",
+            "No Match"
+        ],
+        "icon": "font-awesome/fa-filter",
+        "status": {
+            "x": 548,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "a9453c972b2e207a",
+                    "port": 0
+                },
+                {
+                    "id": "3f82486996b3cfd5",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "b1b3032b9f41f38c",
+        "type": "subflow",
+        "name": "currentstate ⇒ ui list",
+        "info": "Converts a currentstate object to the UI list format",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "5ca0c68c699fe867"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 720,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "e39adf356d1d037b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#E2D96E",
+        "icon": "node-red/swap.svg"
+    },
+    {
+        "id": "f486fb61943eeb89",
+        "type": "subflow",
+        "name": "GetDatapoints",
+        "info": "# GetDatapoints\n\nRequest a set of datapoints (values)\n\nExpects `msg.payload` to contain an array with multiple VSS signal names or a string containing a single name.\n\nReturns an object containing all the requested datapoints as `msg.payload`.\nIf there is an error, `msg.error` is set to the error description.\n",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "343d49df0601f0d6"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 900,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "e808e6b1a93017c6",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 910,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "4744241463197a11",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "GetDatapoints",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "inputLabels": [
+            "payload"
+        ],
+        "outputLabels": [
+            "payload",
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 940,
+            "y": 180,
+            "wires": [
+                {
+                    "id": "c8f806e6b667dae4",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "c86786afde87c8e5",
+        "type": "subflow",
+        "name": "datapoints ⇒ ui list",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "c7cc1bdeedc97a30"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 720,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "70fd1b3003f70b0b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#E2D96E",
+        "icon": "node-red/swap.svg"
+    },
+    {
+        "id": "d2f09c088927a668",
+        "type": "subflow",
+        "name": "datapoints ⇒ ui table",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "9e9a00fa56add8cc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 720,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "87c9693a47913239",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "license": "Apache-2.0"
+        },
+        "color": "#E2D96E",
+        "icon": "node-red/swap.svg"
+    },
+    {
+        "id": "4f41580d2b2e81cf",
+        "type": "subflow",
+        "name": "Subscribe",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "8cbaf8f7c506d7fe"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 940,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "87a5c171fc770428",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 950,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "3d9927502d12ba5d",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "Subscribe",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "inputLabels": [
+            "query"
+        ],
+        "outputLabels": [
+            "payload",
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 980,
+            "y": 180,
+            "wires": [
+                {
+                    "id": "ec790b0f84c62179",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "f206c2b27c248139",
+        "type": "subflow",
+        "name": "parse field",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "fdb285d6f548d25e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 430,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "fdb285d6f548d25e",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 430,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "fdb285d6f548d25e",
+                        "port": 1
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#E2D96E",
+        "outputLabels": [
+            "field",
+            "value"
+        ],
+        "icon": "node-red/rbe.png",
+        "status": {
+            "x": 400,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "fdb285d6f548d25e",
+                    "port": 2
+                }
+            ]
+        }
+    },
+    {
+        "id": "2a90df8a197fb8f2",
+        "type": "subflow",
+        "name": "SetDatapoint",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "aa04a728ca96fca7"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1090,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "c584248d8e09f50e",
+                        "port": 0
+                    },
+                    {
+                        "id": "11db319f92be5c46",
+                        "port": 0
+                    },
+                    {
+                        "id": "68aac2e6408be595",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "SetDatapoint",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "outputLabels": [
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 1120,
+            "y": 60,
+            "wires": [
+                {
+                    "id": "bbc19ba6b0c31177",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "fb585e7f0dd51cfd",
+        "type": "mqtt-broker",
+        "name": "leda-mqtt",
+        "broker": "${MQTT_ADDR}",
+        "port": "${MQTT_PORT}",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6bcbe8d24d01e15f",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-custom",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#5d8dab",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Leda",
+                "default": "#4B7930",
+                "baseColor": "#5d8dab",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#4B7930",
+                    "value": "#5d8dab",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#5d8dab",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#434954",
+                    "edited": true
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#383c45",
+                    "edited": true
+                },
+                "group-textColor": {
+                    "value": "#8fb0c5",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#23252a",
+                    "edited": true
+                },
+                "group-backgroundColor": {
+                    "value": "#383c45",
+                    "edited": true
+                },
+                "widget-textColor": {
+                    "value": "#fafafa",
+                    "edited": true
+                },
+                "widget-backgroundColor": {
+                    "value": "#5d8dab",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#383c45",
+                    "edited": true
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Leda Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "true",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "31b9a607bd7cffa4",
+        "type": "ui_tab",
+        "name": "Update Status",
+        "icon": "system_update",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "853f626a78b514a7",
+        "type": "ui_group",
+        "name": "Self Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 1,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a17b70ba881ce441",
+        "type": "ui_group",
+        "name": "Containers Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 2,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5d06f71eb2d78bfd",
+        "type": "ui_group",
+        "name": "Vehicle Update",
+        "tab": "31b9a607bd7cffa4",
+        "order": 3,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1f6dc92172f4e94b",
+        "type": "grpc-server",
+        "port": "${BROKER_PORT}",
+        "name": "leda-databroker",
+        "server": "${BROKER_ADDR}",
+        "protoFile": "/********************************************************************************\n * Copyright (c) 2022 Contributors to the Eclipse Foundation\n *\n * See the NOTICE file(s) distributed with this work for additional\n * information regarding copyright ownership.\n *\n * This program and the accompanying materials are made available under the\n * terms of the Apache License 2.0 which is available at\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * SPDX-License-Identifier: Apache-2.0\n ********************************************************************************/\n\nsyntax = \"proto3\";\n\npackage sdv.databroker.v1;\n\nimport \"google/protobuf/timestamp.proto\";\n\n// Data type of a signal\n//\n// Protobuf doesn't support int8, int16, uint8 or uint16.\n// These are mapped to sint32 and uint32 respectively.\n//\nenum DataType {\n  STRING          = 0;\n  BOOL            = 1;\n  INT8            = 2;\n  INT16           = 3;\n  INT32           = 4;\n  INT64           = 5;\n  UINT8           = 6;\n  UINT16          = 7;\n  UINT32          = 8;\n  UINT64          = 9;\n  FLOAT           = 10;\n  DOUBLE          = 11;\n  TIMESTAMP       = 12;\n  STRING_ARRAY    = 20;\n  BOOL_ARRAY      = 21;\n  INT8_ARRAY      = 22;\n  INT16_ARRAY     = 23;\n  INT32_ARRAY     = 24;\n  INT64_ARRAY     = 25;\n  UINT8_ARRAY     = 26;\n  UINT16_ARRAY    = 27;\n  UINT32_ARRAY    = 28;\n  UINT64_ARRAY    = 29;\n  FLOAT_ARRAY     = 30;\n  DOUBLE_ARRAY    = 31;\n  TIMESTAMP_ARRAY = 32;\n}\n\nenum DatapointError {\n  UNKNOWN_DATAPOINT = 0;\n  INVALID_TYPE      = 1;\n  ACCESS_DENIED     = 2;\n  INTERNAL_ERROR    = 3;\n  OUT_OF_BOUNDS     = 4;\n}\n\nenum EntryType {\n  ENTRY_TYPE_UNSPECIFIED = 0;\n  ENTRY_TYPE_SENSOR      = 1;\n  ENTRY_TYPE_ACTUATOR    = 2;\n  ENTRY_TYPE_ATTRIBUTE   = 3;\n}\n\nenum ChangeType {\n  STATIC    = 0;   // Value never changes\n  ON_CHANGE = 1;   // Updates are provided every time the value changes (i.e.\n                   // window is open / closed)\n  CONTINUOUS = 2;  // Value is updated continuously. Broker needs to tell\n                   // provider the preferred (update) frequency.\n}\n\nmessage StringArray {\n  repeated string values = 1;\n}\n\nmessage BoolArray {\n  repeated bool values = 1;\n}\n\nmessage Int32Array {\n  repeated sint32 values = 1;\n}\n\nmessage Int64Array {\n  repeated sint64 values = 1;\n}\n\nmessage Uint32Array {\n  repeated uint32 values = 1;\n}\n\nmessage Uint64Array {\n  repeated uint64 values = 1;\n}\n\nmessage FloatArray {\n  repeated float values = 1;\n}\n\nmessage DoubleArray {\n  repeated double values = 1;\n}\n\nmessage Datapoint {\n  // Timestamp of the value\n  google.protobuf.Timestamp timestamp = 1;\n\n  // values\n  oneof value {\n    Failure failure_value    = 10;\n    string string_value      = 11;\n    bool bool_value          = 12;\n    sint32 int32_value       = 13;\n    sint64 int64_value       = 14;\n    uint32 uint32_value      = 15;\n    uint64 uint64_value      = 16;\n    float float_value        = 17;\n    double double_value      = 18;\n    StringArray string_array = 21;\n    BoolArray bool_array     = 22;\n    Int32Array int32_array   = 23;\n    Int64Array int64_array   = 24;\n    Uint32Array uint32_array = 25;\n    Uint64Array uint64_array = 26;\n    FloatArray float_array   = 27;\n    DoubleArray double_array = 28;\n  }\n\n  enum Failure {\n    // The data point is known, but doesn't have a valid value\n    INVALID_VALUE = 0;\n    // The data point is known, but no value is available\n    NOT_AVAILABLE = 1;\n    // Unknown datapoint\n    UNKNOWN_DATAPOINT = 2;\n    // Access denied\n    ACCESS_DENIED = 3;\n    // Unexpected internal error\n    INTERNAL_ERROR = 4;\n  }\n}\n\nmessage Metadata {\n  // Id to be used in \"get\" and \"subscribe\" requests. Ids stay valid during\n  // one power cycle, only.\n  int32 id               = 1;\n  EntryType entry_type   = 2;\n  string name            = 4;\n  DataType data_type     = 5;\n  ChangeType change_type = 6;  // CONTINUOUS or STATIC or ON_CHANGE\n  string description     = 7;\n\n  // int32             min_update_hz       = 10; // Only for CONTINUOUS\n  // int32             max_update_hz       = 11; // Only for CONTINUOUS\n}\n\nservice Broker {\n  // Request a set of datapoints (values)\n  //\n  // Returns a list of requested data points.\n  //\n  // InvalidArgument is returned if the request is malformed.\n  rpc GetDatapoints(GetDatapointsRequest) returns (GetDatapointsReply);\n\n  // Set a datapoint (values)\n  rpc SetDatapoints(SetDatapointsRequest) returns (SetDatapointsReply);\n\n  // Subscribe to a set of data points or conditional expressions\n  // using the Data Broker Query Syntax (described in QUERY.md)\n  //\n  // Returns a stream of replies.\n  //\n  // InvalidArgument is returned if the request is malformed.\n  rpc Subscribe(SubscribeRequest) returns (stream SubscribeReply);\n\n  // Request the metadata of a set of datapoints\n  //\n  // Returns metadata of the requested data points that exist.\n  rpc GetMetadata(GetMetadataRequest) returns (GetMetadataReply);\n}\n\nmessage GetDatapointsRequest {\n  // A list of requested data points.\n  repeated string datapoints = 1;\n}\n\nmessage GetDatapointsReply {\n  // Contains the values of the requested data points.\n  // If a requested data point is not available, the corresponding Datapoint\n  // will have the respective failure value set.\n  map<string, Datapoint> datapoints = 1;\n}\n\nmessage SetDatapointsRequest {\n  // A map of data points to set\n  map<string, Datapoint> datapoints = 1;\n}\n\nmessage SetDatapointsReply {\n  // A map of errors (if any)\n  map<string, DatapointError> errors = 1;\n}\n\nmessage SubscribeRequest {\n  // Subscribe to a set of data points (or expressions) described\n  // by the provided query.\n  // The query syntax is a subset of SQL and is described in more\n  // detail in the QUERY.md file.\n  string query = 2;\n}\n\nmessage SubscribeReply {\n  // Contains the fields specified by the query.\n  // If a requested data point value is not available, the corresponding\n  // Datapoint will have it's respective failure value set.\n  map<string, Datapoint> fields = 1;\n}\n\nmessage GetMetadataRequest {\n  // Request metadata for a list of data points referenced by their names.\n  // e.g. \"Vehicle.Cabin.Seat.Row1.Pos1.Position\" or \"Vehicle.Speed\".\n  //\n  // If no names are provided, metadata for all known data points will be\n  // returned.\n  repeated string names = 1;\n}\n\nmessage GetMetadataReply {\n  // Contains metadata of the requested data points. If a data point\n  // doesn't exist (i.e. not known to the Data Broker) the corresponding\n  // Metadata isn't part of the returned list.\n  repeated Metadata list = 1;\n}",
+        "ca": "",
+        "chain": "",
+        "key": "",
+        "mutualTls": false,
+        "ssl": false,
+        "selfsigned": false,
+        "localServer": false
+    },
+    {
+        "id": "6766a5d8d8a377ed",
+        "type": "ui_tab",
+        "name": "VSS Example",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "0b2827de9e647c6b",
+        "type": "ui_group",
+        "name": "Simple Datapoint(s) Query",
+        "tab": "cb4c0e56e5211151",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ff74e0831e03da9e",
+        "type": "ui_group",
+        "name": "VSS Dashboard",
+        "tab": "6766a5d8d8a377ed",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "97020d029d45d7c5",
+        "type": "ui_group",
+        "name": "GPS Data",
+        "tab": "6766a5d8d8a377ed",
+        "order": 2,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cb4c0e56e5211151",
+        "type": "ui_tab",
+        "name": "VSS Control",
+        "icon": "data_usage",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "bbd4d084b2393362",
+        "type": "ui_tab",
+        "name": "Seat Adjuster",
+        "icon": "airline_seat_recline_normal",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f841d8649da9f99c",
+        "type": "ui_group",
+        "name": "Seat Position",
+        "tab": "bbd4d084b2393362",
+        "order": 2,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cf8ef45b9e838be2",
+        "type": "ui_group",
+        "name": "Set Seat Position",
+        "tab": "bbd4d084b2393362",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4c084886ec09c806",
+        "type": "ui_spacer",
+        "z": "7f2a49a791478fb0",
+        "name": "spacer",
+        "group": "cf8ef45b9e838be2",
+        "order": 8,
+        "width": "12",
+        "height": "1"
+    },
+    {
+        "id": "2c78f54e57368ce2",
+        "type": "ui_spacer",
+        "z": "7f2a49a791478fb0",
+        "name": "spacer",
+        "group": "cf8ef45b9e838be2",
+        "order": 1,
+        "width": "12",
+        "height": "1"
+    },
+    {
+        "id": "d249a213277af7af",
+        "type": "ui_spacer",
+        "z": "7f2a49a791478fb0",
+        "name": "spacer",
+        "group": "cf8ef45b9e838be2",
+        "order": 4,
+        "width": "1",
+        "height": "2"
+    },
+    {
+        "id": "efe3a0ea76c51e04",
+        "type": "ui_group",
+        "name": "Set Datapoint",
+        "tab": "cb4c0e56e5211151",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c7d41124ecdd2680",
+        "type": "ui_spacer",
+        "z": "df00f52c34ea8f47",
+        "name": "spacer",
+        "group": "0b2827de9e647c6b",
+        "order": 4,
+        "width": "12",
+        "height": "1"
+    },
+    {
+        "id": "1ef13f666f02eb22",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "filter",
+        "func": "var a = msg.topic;\nvar b = env.get(\"filter\") || '#';\n\nif(a===b) { return [msg, null]; }\nif(b==='#') { \n    if(a) return [msg, null]; //if topic is something, OK\n    return [null, msg];//otherwise, fail!\n}\nvar nameSegments = a.split('/');\nvar filterSegments = b.split('/');\nfor (var i = 0; i < filterSegments.length; i++) {\n    var topicSegment = nameSegments[i];\n    var patternSegment = filterSegments[i];\n    var match = false;\n    if(topicSegment === patternSegment) { match = true; }\n    if(patternSegment === '+') { match = true; }\n    if(patternSegment === '#') {  return [msg, null]; }\n    if(match === false) { return [null, msg]; }\n}\nif(nameSegments.length !== filterSegments.length) { return [null, msg]; }\n\nreturn [msg, null];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 192,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d55c5c0a665fdcc9",
+        "type": "inject",
+        "z": "544891f94013761e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 148,
+        "y": 160,
+        "wires": [
+            [
+                "be5346c60d2899c1"
+            ]
+        ]
+    },
+    {
+        "id": "a9453c972b2e207a",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "",
+        "func": "var b = env.get(\"filter\") || '#';\nnode.status({text:b})\nmsg.payload = b;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 428,
+        "y": 144,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be5346c60d2899c1",
+        "type": "switch",
+        "z": "544891f94013761e",
+        "name": "",
+        "property": "status",
+        "propertyType": "env",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 290,
+        "y": 160,
+        "wires": [
+            [
+                "a9453c972b2e207a"
+            ],
+            [
+                "3f82486996b3cfd5"
+            ]
+        ]
+    },
+    {
+        "id": "3f82486996b3cfd5",
+        "type": "function",
+        "z": "544891f94013761e",
+        "name": "",
+        "func": "node.status({})\ndelete msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 428,
+        "y": 192,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ca0c68c699fe867",
+        "type": "split",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "283cd6e88e8ad3d3"
+            ]
+        ]
+    },
+    {
+        "id": "b029b52f6c2b4a24",
+        "type": "join",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "mode": "auto",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": "false",
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "x": 470,
+        "y": 60,
+        "wires": [
+            [
+                "e39adf356d1d037b"
+            ]
+        ]
+    },
+    {
+        "id": "283cd6e88e8ad3d3",
+        "type": "function",
+        "z": "b1b3032b9f41f38c",
+        "name": "function",
+        "func": "const icons = {\n    IMAGE: \"fa-cube\",\n    APPLICATION: \"fa-cogs\",\n    CONTAINER: \"cloud\",\n    _IMAGE: \"📦\",\n    _APPLICATION: \"⚙️\",\n    _CONTAINER: \"\"\n}\nconst payload = {\n    title: msg.payload.name,\n    description: `${msg.payload.id}<br>${msg.payload.version}`,\n    icon_name: icons[msg.payload.type] || \"fa-question\",\n    _id: msg.payload.id,\n    _version: msg.payload.version,\n    _name: msg.payload.name,\n    _type: msg.payload.type\n}\nmsg.payload = payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "b029b52f6c2b4a24"
+            ]
+        ]
+    },
+    {
+        "id": "e39adf356d1d037b",
+        "type": "sort",
+        "z": "b1b3032b9f41f38c",
+        "name": "",
+        "order": "ascending",
+        "as_num": false,
+        "target": "payload",
+        "targetType": "msg",
+        "msgKey": "$lowercase(title ? title : description)",
+        "msgKeyType": "jsonata",
+        "seqKey": "payload",
+        "seqKeyType": "msg",
+        "x": 610,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "73479712c98cf763",
+        "type": "grpc-call",
+        "z": "f486fb61943eeb89",
+        "name": "RequestGetDatapoints",
+        "server": "1f6dc92172f4e94b",
+        "service": "Broker",
+        "method": "GetDatapoints",
+        "chain": "",
+        "key": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "e808e6b1a93017c6",
+                "6ff421e4278d80d2",
+                "c8f806e6b667dae4"
+            ]
+        ]
+    },
+    {
+        "id": "343d49df0601f0d6",
+        "type": "function",
+        "z": "f486fb61943eeb89",
+        "name": "GetDatapointsRequest",
+        "func": "let data = msg.payload\n\nif (typeof msg.payload === \"string\") {\n    data = msg.payload.replace(/\\s+/g, ' ').split(\" \")\n}\n\nmsg.payload = {\n    datapoints: data\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 60,
+        "wires": [
+            [
+                "73479712c98cf763"
+            ]
+        ]
+    },
+    {
+        "id": "e808e6b1a93017c6",
+        "type": "change",
+        "z": "f486fb61943eeb89",
+        "name": "datapoints",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.datapoints",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4744241463197a11",
+        "type": "change",
+        "z": "f486fb61943eeb89",
+        "name": "error",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8f806e6b667dae4",
+        "type": "function",
+        "z": "f486fb61943eeb89",
+        "name": "status",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nmsg.payload = msg.error ? statusError : statusOk\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6ff421e4278d80d2",
+        "type": "switch",
+        "z": "f486fb61943eeb89",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 630,
+        "y": 120,
+        "wires": [
+            [
+                "4744241463197a11"
+            ]
+        ]
+    },
+    {
+        "id": "c7cc1bdeedc97a30",
+        "type": "split",
+        "z": "c86786afde87c8e5",
+        "name": "",
+        "splt": "",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "32e60ccc82f53d22"
+            ]
+        ]
+    },
+    {
+        "id": "758d4bc10c8eb341",
+        "type": "join",
+        "z": "c86786afde87c8e5",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 470,
+        "y": 60,
+        "wires": [
+            [
+                "70fd1b3003f70b0b"
+            ]
+        ]
+    },
+    {
+        "id": "32e60ccc82f53d22",
+        "type": "function",
+        "z": "c86786afde87c8e5",
+        "name": "function",
+        "func": "msg.payload = {\n    title: msg.parts.key,\n    description: msg.payload[msg.payload.value],\n    value_type: msg.payload.value\n}\n\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "758d4bc10c8eb341"
+            ]
+        ]
+    },
+    {
+        "id": "70fd1b3003f70b0b",
+        "type": "sort",
+        "z": "c86786afde87c8e5",
+        "name": "",
+        "order": "ascending",
+        "as_num": false,
+        "target": "payload",
+        "targetType": "msg",
+        "msgKey": "$lowercase(title ? title : description)",
+        "msgKeyType": "jsonata",
+        "seqKey": "payload",
+        "seqKeyType": "msg",
+        "x": 610,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9e9a00fa56add8cc",
+        "type": "split",
+        "z": "d2f09c088927a668",
+        "name": "",
+        "splt": "",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "d9e4a315e0b5c05a"
+            ]
+        ]
+    },
+    {
+        "id": "57e5508b3f4682fd",
+        "type": "join",
+        "z": "d2f09c088927a668",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 470,
+        "y": 60,
+        "wires": [
+            [
+                "87c9693a47913239"
+            ]
+        ]
+    },
+    {
+        "id": "d9e4a315e0b5c05a",
+        "type": "function",
+        "z": "d2f09c088927a668",
+        "name": "function",
+        "func": "const tpl_na = '<span style=\"color:#8888ff; font-style:italic;\">not available</span>'\nconst tpl_ud = '<span style=\"color:#ffff00; font-style:italic;\">unknown datapoint</span>'\n\nlet value = msg.payload[msg.payload.value] \n\nif (value === \"NOT_AVAILABLE\") {\n    value = tpl_na\n}\nelse if (value === \"UNKNOWN_DATAPOINT\") {\n    value = tpl_ud\n}\n\nmsg.payload = {\n    signal: msg.parts.key,\n    value: value,\n}\n\nreturn msg\n\n// icon_name: msg.payload[msg.payload.value] === \"UNKNOWN_DATAPOINT\" ? \"error\" : \"\",\n// Type: msg.payload.value\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "57e5508b3f4682fd"
+            ]
+        ]
+    },
+    {
+        "id": "87c9693a47913239",
+        "type": "sort",
+        "z": "d2f09c088927a668",
+        "name": "",
+        "order": "ascending",
+        "as_num": false,
+        "target": "payload",
+        "targetType": "msg",
+        "msgKey": "$lowercase(signal)",
+        "msgKeyType": "jsonata",
+        "seqKey": "payload",
+        "seqKeyType": "msg",
+        "x": 610,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5043d8d345687e56",
+        "type": "grpc-call",
+        "z": "4f41580d2b2e81cf",
+        "name": "RequestSubscription",
+        "server": "1f6dc92172f4e94b",
+        "service": "Broker",
+        "method": "Subscribe",
+        "chain": "",
+        "key": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "ad83535f4d9e9305",
+                "ec790b0f84c62179",
+                "8fa8d5f99b982f8a"
+            ]
+        ]
+    },
+    {
+        "id": "8cbaf8f7c506d7fe",
+        "type": "function",
+        "z": "4f41580d2b2e81cf",
+        "name": "SubscribeRequest",
+        "func": "msg.payload = {\n    query: msg.payload\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 60,
+        "wires": [
+            [
+                "5043d8d345687e56"
+            ]
+        ]
+    },
+    {
+        "id": "87a5c171fc770428",
+        "type": "change",
+        "z": "4f41580d2b2e81cf",
+        "name": "fields",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.fields",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3d9927502d12ba5d",
+        "type": "change",
+        "z": "4f41580d2b2e81cf",
+        "name": "error",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ec790b0f84c62179",
+        "type": "function",
+        "z": "4f41580d2b2e81cf",
+        "name": "status",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nmsg.payload = msg.error ? statusError : statusOk\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ad83535f4d9e9305",
+        "type": "switch",
+        "z": "4f41580d2b2e81cf",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 120,
+        "wires": [
+            [
+                "3d9927502d12ba5d"
+            ]
+        ]
+    },
+    {
+        "id": "8fa8d5f99b982f8a",
+        "type": "rbe",
+        "z": "4f41580d2b2e81cf",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 650,
+        "y": 60,
+        "wires": [
+            [
+                "87a5c171fc770428"
+            ]
+        ]
+    },
+    {
+        "id": "fdb285d6f548d25e",
+        "type": "function",
+        "z": "f206c2b27c248139",
+        "name": "parse field content",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst signal_name = msg.topic\nconst field = msg.payload\n\nlet ret_msg = {\n    topic: signal_name,\n    payload: msg.payload\n}\n\nlet ret_value = {\n    topic: signal_name,\n    payload: null\n}\n\nlet status = null\n\n\nif (field) {\n    const value = field[field.value]\n\n    if (value === \"NOT_AVAILABLE\" || value === \"UNKNOWN_DATAPOINT\") {\n        ret_value = null\n        status = statusError\n    }\n    else {\n        ret_value.payload = value\n        status = statusOk\n    }\n}\nelse {\n    ret_value = null\n    status = statusError\n}\n\nreturn [ret_msg, ret_value, status]\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 60,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "5f0eda38a2ac5bf3",
+        "type": "grpc-call",
+        "z": "2a90df8a197fb8f2",
+        "name": "RequestSetDatapoint",
+        "server": "1f6dc92172f4e94b",
+        "service": "Broker",
+        "method": "SetDatapoints",
+        "chain": "",
+        "key": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "bbc19ba6b0c31177",
+                "8140d535e5a00db8",
+                "e1ffb3d27d252101"
+            ]
+        ]
+    },
+    {
+        "id": "aa04a728ca96fca7",
+        "type": "function",
+        "z": "2a90df8a197fb8f2",
+        "name": "SetDatapointsRequest",
+        "func": "const datapoints = {}\n\ndatapoints[msg.topic] = {\n    timestamp: new Date(),\n    value: msg.payload\n}\n\nmsg.payload = {\n    datapoints: datapoints\n}\n\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 60,
+        "wires": [
+            [
+                "5f0eda38a2ac5bf3"
+            ]
+        ]
+    },
+    {
+        "id": "bbc19ba6b0c31177",
+        "type": "function",
+        "z": "2a90df8a197fb8f2",
+        "name": "error",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst error = msg.error || msg.payload.errors\nconst status = error ? statusError : statusOk\n\nreturn [\n    { payload: status },\n    { payload: error }\n]\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 60,
+        "wires": [
+            [],
+            [
+                "6b5ab52b8b83f1fb"
+            ]
+        ]
+    },
+    {
+        "id": "8140d535e5a00db8",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 140,
+        "wires": [
+            [
+                "c584248d8e09f50e"
+            ]
+        ]
+    },
+    {
+        "id": "e1ffb3d27d252101",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "payload.errors",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 180,
+        "wires": [
+            [
+                "332bbae3a02c5b5c"
+            ]
+        ]
+    },
+    {
+        "id": "c584248d8e09f50e",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "332bbae3a02c5b5c",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.errors",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 180,
+        "wires": [
+            [
+                "0a4b18eac2507388"
+            ]
+        ]
+    },
+    {
+        "id": "0a4b18eac2507388",
+        "type": "split",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 970,
+        "y": 180,
+        "wires": [
+            [
+                "11db319f92be5c46"
+            ]
+        ]
+    },
+    {
+        "id": "11db319f92be5c46",
+        "type": "function",
+        "z": "2a90df8a197fb8f2",
+        "name": "function 1",
+        "func": "msg.payload = `${msg.key}: ${msg.payload}`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b5ab52b8b83f1fb",
+        "type": "switch",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 220,
+        "wires": [
+            [
+                "68aac2e6408be595"
+            ]
+        ]
+    },
+    {
+        "id": "68aac2e6408be595",
+        "type": "change",
+        "z": "2a90df8a197fb8f2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa13d953ce65705f",
+        "type": "subflow:f486fb61943eeb89",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "088f0f039337cb07"
+            ],
+            [
+                "ab5e03f2bf0485b2"
+            ]
+        ]
+    },
+    {
+        "id": "12b647de42ef96b0",
+        "type": "ui_text_input",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "label": "Datapoint(s)",
+        "tooltip": "Enter one or more datapoints, separated by space",
+        "group": "0b2827de9e647c6b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "mode": "text",
+        "delay": "300",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "8fd234bb13f9acd7"
+            ]
+        ]
+    },
+    {
+        "id": "e207e7372d546859",
+        "type": "ui_table",
+        "z": "df00f52c34ea8f47",
+        "group": "0b2827de9e647c6b",
+        "name": "Results Table",
+        "order": 3,
+        "width": "12",
+        "height": "4",
+        "columns": [
+            {
+                "field": "signal",
+                "title": "Signal Name",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "value",
+                "title": "Value",
+                "width": "",
+                "align": "right",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 900,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "088f0f039337cb07",
+        "type": "subflow:d2f09c088927a668",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 680,
+        "y": 60,
+        "wires": [
+            [
+                "e207e7372d546859"
+            ]
+        ]
+    },
+    {
+        "id": "9acf3786ecb93f00",
+        "type": "ui_button",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "0b2827de9e647c6b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Query",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "search",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "e56359a3b1f73be4"
+            ]
+        ]
+    },
+    {
+        "id": "8fd234bb13f9acd7",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "save query",
+        "rules": [
+            {
+                "t": "set",
+                "p": "query_payload",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 270,
+        "y": 60,
+        "wires": [
+            [
+                "aa13d953ce65705f"
+            ]
+        ]
+    },
+    {
+        "id": "e56359a3b1f73be4",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "repeat query",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "query_payload",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "aa13d953ce65705f"
+            ]
+        ]
+    },
+    {
+        "id": "ab5e03f2bf0485b2",
+        "type": "debug",
+        "z": "df00f52c34ea8f47",
+        "name": "databroker error",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "aa7e9b6ee7e2af8c",
+        "type": "subflow:4f41580d2b2e81cf",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 300,
+        "y": 260,
+        "wires": [
+            [
+                "4b836e3a267014ae"
+            ],
+            [
+                "ab5e03f2bf0485b2"
+            ]
+        ]
+    },
+    {
+        "id": "27f000aa65bd8c17",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "Databroker Query",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "SELECT Vehicle.Speed, Vehicle.IsMoving, Vehicle.OBD.FuelLevel, Vehicle.TravelledDistance, Vehicle.Powertrain.FuelSystem.TimeSinceStart, Vehicle.CurrentLocation.Latitude, Vehicle.CurrentLocation.Longitude, Vehicle.Cabin.Seat.Row1.Pos1.Position",
+        "payloadType": "str",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "aa7e9b6ee7e2af8c"
+            ]
+        ]
+    },
+    {
+        "id": "147df8ed194c901d",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "env": [
+            {
+                "name": "signal",
+                "value": "Vehicle.Speed",
+                "type": "str"
+            }
+        ],
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [],
+            [
+                "ed41f34f4a925a32",
+                "53b8cdacd2594f26",
+                "5fbefec64235a61f"
+            ]
+        ]
+    },
+    {
+        "id": "ed41f34f4a925a32",
+        "type": "ui_gauge",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "ff74e0831e03da9e",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Current Speed",
+        "label": "km/h",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": "250",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 960,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "53b8cdacd2594f26",
+        "type": "ui_chart",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "ff74e0831e03da9e",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "label": "Speed History",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "no data available",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "250",
+        "removeOlder": "15",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 960,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7bd2591a5e21c6e9",
+        "type": "switch",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Vehicle.Speed",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.TravelledDistance",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.Powertrain.FuelSystem.TimeSinceStart",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.IsMoving",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.OBD.FuelLevel",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.CurrentLocation.Latitude",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.CurrentLocation.Longitude",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.CurrentLocation.Heading",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 9,
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "147df8ed194c901d"
+            ],
+            [],
+            [],
+            [],
+            [],
+            [
+                "9601e9879234a4fa"
+            ],
+            [
+                "2a3940cd213d076e"
+            ],
+            [
+                "3620e9b576ab598a"
+            ],
+            [
+                "a6f2972df18c311f"
+            ]
+        ]
+    },
+    {
+        "id": "4b836e3a267014ae",
+        "type": "split",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "7bd2591a5e21c6e9"
+            ]
+        ]
+    },
+    {
+        "id": "b7175d3932e07f63",
+        "type": "ui_worldmap",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "OSMC",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "true",
+        "panlock": "true",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "deg",
+        "showgrid": "false",
+        "showruler": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 1020,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "5fbefec64235a61f",
+        "type": "function",
+        "z": "df00f52c34ea8f47",
+        "name": "convert map data",
+        "func": "const payload = flow.get(\"gps_data\")\n\nswitch (msg.topic) {\n    case \"Vehicle.CurrentLocation.Latitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lat = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Longitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lon = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Heading\":\n        if (!isNaN(msg.payload)) {\n            payload.heading = msg.payload\n        }\n        break\n    case \"Vehicle.Speed\":\n        if (!isNaN(msg.payload)) {\n            payload.speed = msg.payload\n        }\n        break\n}\n\nflow.set(\"gps_data\", payload)\nmsg.payload = payload\n\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"gps_data\", {\n    name: \"Vehicle\",\n    icon: \"car\"\n})\n",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 480,
+        "wires": [
+            [
+                "b7175d3932e07f63"
+            ]
+        ]
+    },
+    {
+        "id": "9601e9879234a4fa",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 630,
+        "y": 480,
+        "wires": [
+            [],
+            [
+                "5fbefec64235a61f"
+            ]
+        ]
+    },
+    {
+        "id": "2a3940cd213d076e",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 630,
+        "y": 520,
+        "wires": [
+            [],
+            [
+                "5fbefec64235a61f"
+            ]
+        ]
+    },
+    {
+        "id": "3620e9b576ab598a",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 630,
+        "y": 560,
+        "wires": [
+            [],
+            [
+                "5fbefec64235a61f"
+            ]
+        ]
+    },
+    {
+        "id": "f220d8ca3595f40f",
+        "type": "subflow:2a90df8a197fb8f2",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 630,
+        "y": 700,
+        "wires": [
+            [
+                "244d32831b583804"
+            ]
+        ]
+    },
+    {
+        "id": "bbb93784045bf6a3",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Vehicle.Speed",
+        "payload": "123.45",
+        "payloadType": "str",
+        "x": 140,
+        "y": 700,
+        "wires": [
+            [
+                "f220d8ca3595f40f"
+            ]
+        ]
+    },
+    {
+        "id": "7d8aac4ef65fd16a",
+        "type": "link out",
+        "z": "df00f52c34ea8f47",
+        "name": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
+        "mode": "link",
+        "links": [
+            "5992af44a4bef7c8"
+        ],
+        "x": 995,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "a6f2972df18c311f",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 870,
+        "y": 400,
+        "wires": [
+            [],
+            [
+                "7d8aac4ef65fd16a"
+            ]
+        ]
+    },
+    {
+        "id": "665830ece00c82d6",
+        "type": "ui_button",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Set",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "send",
+        "payload": "set_datapoint_payload",
+        "payloadType": "flow",
+        "topic": "set_datapoint_topic",
+        "topicType": "flow",
+        "x": 90,
+        "y": 640,
+        "wires": [
+            [
+                "c6c7658543aee121"
+            ]
+        ]
+    },
+    {
+        "id": "e795cb05db09f7eb",
+        "type": "ui_text_input",
+        "z": "df00f52c34ea8f47",
+        "name": "signal",
+        "label": "Signal Name",
+        "tooltip": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 1,
+        "width": "12",
+        "height": "1",
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 90,
+        "y": 560,
+        "wires": [
+            [
+                "5cd8f2bd98d5bac5"
+            ]
+        ]
+    },
+    {
+        "id": "11ac5922f3112019",
+        "type": "ui_text_input",
+        "z": "df00f52c34ea8f47",
+        "name": "value",
+        "label": "Value",
+        "tooltip": "",
+        "group": "efe3a0ea76c51e04",
+        "order": 2,
+        "width": "12",
+        "height": "1",
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 90,
+        "y": 600,
+        "wires": [
+            [
+                "ade502a8f5a25bbb"
+            ]
+        ]
+    },
+    {
+        "id": "5cd8f2bd98d5bac5",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "set_datapoint_topic",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ade502a8f5a25bbb",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "set_datapoint_payload",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c6c7658543aee121",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "set query",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "set_datapoint_payload",
+                "tot": "flow"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "set_datapoint_topic",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 640,
+        "wires": [
+            [
+                "f220d8ca3595f40f"
+            ]
+        ]
+    },
+    {
+        "id": "244d32831b583804",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "efe3a0ea76c51e04",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "set error",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 800,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "7b1e0e7cf64109ab",
+        "type": "ui_slider",
+        "z": "7f2a49a791478fb0",
+        "name": "",
+        "label": "Seat Position",
+        "tooltip": "",
+        "group": "f841d8649da9f99c",
+        "order": 1,
+        "width": "9",
+        "height": "1",
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "1000",
+        "step": 1,
+        "className": "",
+        "x": 230,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5992af44a4bef7c8",
+        "type": "link in",
+        "z": "7f2a49a791478fb0",
+        "name": "Seat Adjuster",
+        "links": [
+            "7d8aac4ef65fd16a"
+        ],
+        "x": 65,
+        "y": 340,
+        "wires": [
+            [
+                "7b1e0e7cf64109ab",
+                "6fc8c4778b126893"
+            ]
+        ]
+    },
+    {
+        "id": "6fc8c4778b126893",
+        "type": "ui_text",
+        "z": "7f2a49a791478fb0",
+        "group": "f841d8649da9f99c",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "name": "Position",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 220,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "180d2b671606e6f2",
+        "type": "ui_button",
+        "z": "7f2a49a791478fb0",
+        "name": "",
+        "group": "cf8ef45b9e838be2",
+        "order": 2,
+        "width": "4",
+        "height": "2",
+        "passthru": false,
+        "label": "Alice",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "person",
+        "payload": "100",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "7bc23267ac469ae6"
+            ]
+        ]
+    },
+    {
+        "id": "0cfe20803b009c74",
+        "type": "ui_button",
+        "z": "7f2a49a791478fb0",
+        "name": "",
+        "group": "cf8ef45b9e838be2",
+        "order": 3,
+        "width": "4",
+        "height": "2",
+        "passthru": false,
+        "label": "Bob",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "person_outline",
+        "payload": "200",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "7bc23267ac469ae6"
+            ]
+        ]
+    },
+    {
+        "id": "55245bb8ebee7ba1",
+        "type": "ui_button",
+        "z": "7f2a49a791478fb0",
+        "name": "",
+        "group": "cf8ef45b9e838be2",
+        "order": 5,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Pos. 0",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 220,
+        "wires": [
+            [
+                "7bc23267ac469ae6"
+            ]
+        ]
+    },
+    {
+        "id": "3f4b4e9f01b88269",
+        "type": "ui_button",
+        "z": "7f2a49a791478fb0",
+        "name": "",
+        "group": "cf8ef45b9e838be2",
+        "order": 6,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Pos. 1000",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1000",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 100,
+        "y": 260,
+        "wires": [
+            [
+                "7bc23267ac469ae6"
+            ]
+        ]
+    },
+    {
+        "id": "5ce1b06a6ce3e7f9",
+        "type": "link out",
+        "z": "7f2a49a791478fb0",
+        "name": "Set Seat Position",
+        "mode": "link",
+        "links": [
+            "19655fb9c907d1e2"
+        ],
+        "x": 415,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7bc23267ac469ae6",
+        "type": "function",
+        "z": "7f2a49a791478fb0",
+        "name": "set seat position",
+        "func": "msg.topic = \"seatadjuster/setPosition/request\"\nmsg.payload = {\n    position: msg.payload,\n    requestId: uuid.v1()\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "uuid",
+                "module": "uuid"
+            }
+        ],
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "5ce1b06a6ce3e7f9"
+            ]
+        ]
+    },
+    {
+        "id": "93075da94759eddf",
+        "type": "ui_text",
+        "z": "7f2a49a791478fb0",
+        "group": "cf8ef45b9e838be2",
+        "order": 7,
+        "width": "12",
+        "height": "1",
+        "name": "",
+        "label": "",
+        "format": "Seat adjustment is only allowed, when the vehicle speed is zero!",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 90,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ee9b28a56f9b8b38",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "853f626a78b514a7",
+        "name": "Self Update Status",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 870,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "bdc66b589cb4230c",
+        "type": "switch",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "selfupdate/currentstate",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "containersupdate/currentstate",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "vehicleupdate/currentstate",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 250,
+        "y": 60,
+        "wires": [
+            [
+                "37e9b18dafd41294"
+            ],
+            [
+                "0b26a6aace74d46f"
+            ],
+            [
+                "d8fbf20d86790ee4"
+            ]
+        ]
+    },
+    {
+        "id": "37e9b18dafd41294",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "9d62962c43ae669b"
+            ]
+        ]
+    },
+    {
+        "id": "0b26a6aace74d46f",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 120,
+        "wires": [
+            [
+                "20e819c71a01bd69"
+            ]
+        ]
+    },
+    {
+        "id": "9d62962c43ae669b",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 670,
+        "y": 60,
+        "wires": [
+            [
+                "ee9b28a56f9b8b38"
+            ]
+        ]
+    },
+    {
+        "id": "ec97b77461b25d15",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "a17b70ba881ce441",
+        "name": "Containers Update",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 870,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "20e819c71a01bd69",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 670,
+        "y": 120,
+        "wires": [
+            [
+                "ec97b77461b25d15"
+            ]
+        ]
+    },
+    {
+        "id": "d8fbf20d86790ee4",
+        "type": "change",
+        "z": "bdd28665bfe7cc3e",
+        "name": "softwareNodes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload.softwareNodes",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 180,
+        "wires": [
+            [
+                "ce7d39da84e78b9b"
+            ]
+        ]
+    },
+    {
+        "id": "1c958cc219a01f7e",
+        "type": "ui_list",
+        "z": "bdd28665bfe7cc3e",
+        "group": "5d06f71eb2d78bfd",
+        "name": "Vehicle Update",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "lineType": "three",
+        "actionType": "none",
+        "allowHTML": true,
+        "outputs": 0,
+        "topic": "",
+        "x": 860,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ce7d39da84e78b9b",
+        "type": "subflow:b1b3032b9f41f38c",
+        "z": "bdd28665bfe7cc3e",
+        "name": "",
+        "x": 670,
+        "y": 180,
+        "wires": [
+            [
+                "1c958cc219a01f7e"
+            ]
+        ]
+    },
+    {
+        "id": "0ed9e753be801df6",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Self Update State",
+        "group": "853f626a78b514a7",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "selfupdate/currentstate/get",
+        "topicType": "str",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "de937bc070e0acda",
+        "type": "function",
+        "z": "bdd28665bfe7cc3e",
+        "name": "build ua msg",
+        "func": "msg.payload = {\n    activityId: uuid.v1(),\n    timestamp: Date.now(),\n    payload: msg.payload || {}\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "uuid",
+                "module": "uuid"
+            }
+        ],
+        "x": 450,
+        "y": 260,
+        "wires": [
+            [
+                "54347d4ec1cab856"
+            ]
+        ]
+    },
+    {
+        "id": "a6f6ef030e3d147a",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Containers Update State",
+        "group": "a17b70ba881ce441",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "containersupdate/currentstate/get",
+        "topicType": "str",
+        "x": 160,
+        "y": 320,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "06b842f31c04e61b",
+        "type": "ui_button",
+        "z": "bdd28665bfe7cc3e",
+        "name": "Get Vehicle Update State",
+        "group": "5d06f71eb2d78bfd",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Get current state",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "update",
+        "payload": "{}",
+        "payloadType": "json",
+        "topic": "vehicleupdate/currentstate/get",
+        "topicType": "str",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "de937bc070e0acda"
+            ]
+        ]
+    },
+    {
+        "id": "3661535da85e7507",
+        "type": "link in",
+        "z": "bdd28665bfe7cc3e",
+        "name": "MQTT in 1",
+        "links": [
+            "18110494fbac6fc6"
+        ],
+        "x": 100,
+        "y": 60,
+        "wires": [
+            [
+                "bdc66b589cb4230c"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "54347d4ec1cab856",
+        "type": "link out",
+        "z": "bdd28665bfe7cc3e",
+        "name": "MQTT out 1",
+        "mode": "link",
+        "links": [
+            "19655fb9c907d1e2"
+        ],
+        "x": 850,
+        "y": 260,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "1877c8b9e075b7d8",
+        "type": "mqtt in",
+        "z": "8893ce2e3bcd6415",
+        "name": "leda-mqtt in",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "fb585e7f0dd51cfd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "18110494fbac6fc6",
+                "cac87b1838e0d8f6"
+            ]
+        ]
+    },
+    {
+        "id": "05a4bf55c32bc4e6",
+        "type": "mqtt out",
+        "z": "8893ce2e3bcd6415",
+        "name": "leda-mqtt out",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "fb585e7f0dd51cfd",
+        "x": 290,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "19655fb9c907d1e2",
+        "type": "link in",
+        "z": "8893ce2e3bcd6415",
+        "name": "MQTT Out",
+        "links": [
+            "54347d4ec1cab856",
+            "5ce1b06a6ce3e7f9"
+        ],
+        "x": 55,
+        "y": 200,
+        "wires": [
+            [
+                "05a4bf55c32bc4e6"
+            ]
+        ]
+    },
+    {
+        "id": "18110494fbac6fc6",
+        "type": "link out",
+        "z": "8893ce2e3bcd6415",
+        "name": "MQTT in",
+        "mode": "link",
+        "links": [
+            "3661535da85e7507",
+            "81f02c69f246394f"
+        ],
+        "x": 235,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "cac87b1838e0d8f6",
+        "type": "debug",
+        "z": "8893ce2e3bcd6415",
+        "name": "mqtt payload",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    }
+]

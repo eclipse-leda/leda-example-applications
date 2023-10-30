@@ -39,6 +39,10 @@ The **[Kuksa CarSim](kuksa-carsim)** example is based on [Kuksa.VAL Services](ht
 It provides simulated physical motion telemetry of a moving vehicle to the [Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker).
 The databroker is an in-vehicle, in-memory database for signal information. Signal formats are standardized in the [Vehicle Signal Specification](https://github.com/COVESA/vehicle_signal_specification).
 
+### Node-RED
+
+The **[Node-RED](node-red/)** example presents some flows based on the [Node-RED](https://nodered.org/) programming environment to demonstrate how the various service running on a [Leda](https://eclipse-leda.github.io/) distribution can be accessed via a graphical user interface.
+
 ## Contributing
 
 If you want to contribute bug reports or feature requests, please use *GitHub Issues*.
