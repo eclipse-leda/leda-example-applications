@@ -490,6 +490,67 @@
         }
     },
     {
+        "id": "194e312172a28c52",
+        "type": "subflow",
+        "name": "GetMetadata",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "b4a4fd3e5067bf61"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 940,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "dea6b502bbea41c8",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 930,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "2623110acbc23bc1",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "GetMetadata",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "outputLabels": [
+            "list",
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 960,
+            "y": 180,
+            "wires": [
+                {
+                    "id": "f93ed11c4a31355d",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
         "id": "fb585e7f0dd51cfd",
         "type": "mqtt-broker",
         "name": "leda-mqtt",
@@ -675,7 +736,7 @@
     {
         "id": "6766a5d8d8a377ed",
         "type": "ui_tab",
-        "name": "VSS Example",
+        "name": "Dashboard Example",
         "icon": "dashboard",
         "order": 1,
         "disabled": false,
@@ -719,7 +780,7 @@
         "type": "ui_tab",
         "name": "VSS Control",
         "icon": "data_usage",
-        "order": 2,
+        "order": 3,
         "disabled": false,
         "hidden": false
     },
@@ -728,7 +789,7 @@
         "type": "ui_tab",
         "name": "Seat Adjuster",
         "icon": "airline_seat_recline_normal",
-        "order": 3,
+        "order": 2,
         "disabled": false,
         "hidden": false
     },
@@ -804,6 +865,17 @@
         "order": 4,
         "width": "12",
         "height": "1"
+    },
+    {
+        "id": "50d859dc3f14ad9a",
+        "type": "ui_group",
+        "name": "VSS Table",
+        "tab": "cb4c0e56e5211151",
+        "order": 3,
+        "disp": false,
+        "width": "24",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "1ef13f666f02eb22",
@@ -1702,6 +1774,135 @@
         ]
     },
     {
+        "id": "a627b82e04b5df3e",
+        "type": "grpc-call",
+        "z": "194e312172a28c52",
+        "name": "RequestGetMetadata",
+        "server": "1f6dc92172f4e94b",
+        "service": "Broker",
+        "method": "GetMetadata",
+        "chain": "",
+        "key": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "f93ed11c4a31355d",
+                "f4f7c4843e30e0a2",
+                "dea6b502bbea41c8"
+            ]
+        ]
+    },
+    {
+        "id": "b4a4fd3e5067bf61",
+        "type": "function",
+        "z": "194e312172a28c52",
+        "name": "GetMetadataRequest",
+        "func": "let names = msg.payload\n\nif (typeof msg.payload === \"string\") {\n    names = msg.payload.replace(/\\s+/g, ' ').split(\" \")\n}\n\nmsg.payload = {\n    names: names\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 60,
+        "wires": [
+            [
+                "a627b82e04b5df3e"
+            ]
+        ]
+    },
+    {
+        "id": "f93ed11c4a31355d",
+        "type": "function",
+        "z": "194e312172a28c52",
+        "name": "status",
+        "func": "const statusOk = {\n    fill: \"green\",\n    text: msg.payload.list.length ?? \"\"\n}\n\nconst statusError = {\n    fill: \"red\",\n    text: \"Error\"\n}\n\nmsg.payload = msg.error ? statusError : statusOk\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f4f7c4843e30e0a2",
+        "type": "switch",
+        "z": "194e312172a28c52",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 120,
+        "wires": [
+            [
+                "2623110acbc23bc1"
+            ]
+        ]
+    },
+    {
+        "id": "2623110acbc23bc1",
+        "type": "change",
+        "z": "194e312172a28c52",
+        "name": "error",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dea6b502bbea41c8",
+        "type": "change",
+        "z": "194e312172a28c52",
+        "name": "list",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.list",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "aa13d953ce65705f",
         "type": "subflow:f486fb61943eeb89",
         "z": "df00f52c34ea8f47",
@@ -2231,7 +2432,7 @@
         "z": "df00f52c34ea8f47",
         "name": "",
         "x": 630,
-        "y": 700,
+        "y": 640,
         "wires": [
             [
                 "244d32831b583804"
@@ -2259,8 +2460,8 @@
         "topic": "Vehicle.Speed",
         "payload": "123.45",
         "payloadType": "str",
-        "x": 140,
-        "y": 700,
+        "x": 560,
+        "y": 720,
         "wires": [
             [
                 "f220d8ca3595f40f"
@@ -2323,32 +2524,6 @@
         ]
     },
     {
-        "id": "e795cb05db09f7eb",
-        "type": "ui_text_input",
-        "z": "df00f52c34ea8f47",
-        "name": "signal",
-        "label": "Signal Name",
-        "tooltip": "",
-        "group": "efe3a0ea76c51e04",
-        "order": 1,
-        "width": "12",
-        "height": "1",
-        "passthru": true,
-        "mode": "text",
-        "delay": 300,
-        "topic": "topic",
-        "sendOnBlur": true,
-        "className": "",
-        "topicType": "msg",
-        "x": 90,
-        "y": 560,
-        "wires": [
-            [
-                "5cd8f2bd98d5bac5"
-            ]
-        ]
-    },
-    {
         "id": "11ac5922f3112019",
         "type": "ui_text_input",
         "z": "df00f52c34ea8f47",
@@ -2393,7 +2568,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 300,
+        "x": 320,
         "y": 560,
         "wires": [
             []
@@ -2418,7 +2593,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 310,
+        "x": 330,
         "y": 600,
         "wires": [
             []
@@ -2450,7 +2625,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 240,
+        "x": 260,
         "y": 640,
         "wires": [
             [
@@ -2476,8 +2651,250 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 800,
-        "y": 700,
+        "y": 640,
         "wires": []
+    },
+    {
+        "id": "1754e21b1c3c2bca",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "Query Names",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "null",
+        "payloadType": "json",
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "2c2df834976563c7"
+            ]
+        ]
+    },
+    {
+        "id": "2c2df834976563c7",
+        "type": "subflow:194e312172a28c52",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "166ad9257a785bb9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8ecd7b3bc1e9518a",
+        "type": "ui_dropdown",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "label": "Signal Name",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "efe3a0ea76c51e04",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 110,
+        "y": 560,
+        "wires": [
+            [
+                "5cd8f2bd98d5bac5"
+            ]
+        ]
+    },
+    {
+        "id": "6aa833ba5804926b",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "options",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "8ecd7b3bc1e9518a"
+            ]
+        ]
+    },
+    {
+        "id": "8b01be1c8895f838",
+        "type": "ui_table",
+        "z": "df00f52c34ea8f47",
+        "group": "50d859dc3f14ad9a",
+        "name": "VSS Table",
+        "order": 2,
+        "width": "24",
+        "height": "12",
+        "columns": [
+            {
+                "field": "name",
+                "title": "Name",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "desc",
+                "title": "Description",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "data_type",
+                "title": "Type",
+                "width": "16%",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 270,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "4f774d5bf32b8277",
+        "type": "split",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 90,
+        "y": 720,
+        "wires": [
+            [
+                "fd30e33117aebd98"
+            ]
+        ]
+    },
+    {
+        "id": "4c1d4bcd931bcca1",
+        "type": "join",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 90,
+        "y": 780,
+        "wires": [
+            [
+                "8b01be1c8895f838"
+            ]
+        ]
+    },
+    {
+        "id": "166ad9257a785bb9",
+        "type": "function",
+        "z": "df00f52c34ea8f47",
+        "name": "create lists",
+        "func": "const sorted_payload = msg.payload.sort((a, b) => {\n     return a.name > b.name ? 1 : a.name < b.name ? -1 : 0\n})\n\nconst metadata = msg.payload.reduce(\n     (obj, entry) => {\n          return { ...obj, [entry.name]: entry }\n     },\n     {}\n)\n\nglobal.set(\"VSSMetaData\", metadata)\n\nreturn [\n     { payload: metadata },\n     { payload: Object.keys(metadata) }\n]\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 400,
+        "wires": [
+            [
+                "4f774d5bf32b8277"
+            ],
+            [
+                "6aa833ba5804926b"
+            ]
+        ],
+        "outputLabels": [
+            "MetaData",
+            "SignalList"
+        ]
+    },
+    {
+        "id": "fd30e33117aebd98",
+        "type": "function",
+        "z": "df00f52c34ea8f47",
+        "name": "metadata ⇒ table",
+        "func": "const name = `<span title=\"${msg.payload.description}\">${msg.payload.name}</span>`\n\nmsg.payload = {\n    name: name,\n    desc: msg.payload.description,\n    data_type: msg.payload.data_type\n}\n\nreturn msg\n\n// icon_name: msg.payload[msg.payload.value] === \"UNKNOWN_DATAPOINT\" ? \"error\" : \"\",\n// Type: msg.payload.value\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 720,
+        "wires": [
+            [
+                "4c1d4bcd931bcca1"
+            ]
+        ]
     },
     {
         "id": "7b1e0e7cf64109ab",
