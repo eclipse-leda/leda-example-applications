@@ -767,7 +767,7 @@
     {
         "id": "97020d029d45d7c5",
         "type": "ui_group",
-        "name": "GPS Data",
+        "name": "Misc. Data",
         "tab": "6766a5d8d8a377ed",
         "order": 2,
         "disp": false,
@@ -874,6 +874,17 @@
         "order": 3,
         "disp": false,
         "width": "24",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b88a2b3cf1c2a472",
+        "type": "ui_group",
+        "name": "GPS Map",
+        "tab": "6766a5d8d8a377ed",
+        "order": 3,
+        "disp": false,
+        "width": "12",
         "collapse": false,
         "className": ""
     },
@@ -2124,7 +2135,7 @@
         "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "SELECT Vehicle.Speed, Vehicle.IsMoving, Vehicle.OBD.FuelLevel, Vehicle.TravelledDistance, Vehicle.Powertrain.FuelSystem.TimeSinceStart, Vehicle.CurrentLocation.Latitude, Vehicle.CurrentLocation.Longitude, Vehicle.Cabin.Seat.Row1.Pos1.Position",
+        "payload": "SELECT Vehicle.Speed, Vehicle.OBD.FuelLevel, Vehicle.TravelledDistance, Vehicle.CurrentLocation.Latitude, Vehicle.CurrentLocation.Longitude, Vehicle.CurrentLocation.Heading, Vehicle.CurrentLocation.Altitude, Vehicle.Cabin.Seat.Row1.Pos1.Position",
         "payloadType": "str",
         "x": 130,
         "y": 260,
@@ -2138,7 +2149,7 @@
         "id": "147df8ed194c901d",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
+        "name": "Speed",
         "env": [
             {
                 "name": "signal",
@@ -2146,14 +2157,13 @@
                 "type": "str"
             }
         ],
-        "x": 770,
-        "y": 180,
+        "x": 710,
+        "y": 220,
         "wires": [
             [],
             [
                 "ed41f34f4a925a32",
-                "53b8cdacd2594f26",
-                "5fbefec64235a61f"
+                "53b8cdacd2594f26"
             ]
         ]
     },
@@ -2181,7 +2191,7 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 960,
+        "x": 980,
         "y": 180,
         "wires": []
     },
@@ -2223,7 +2233,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 960,
+        "x": 980,
         "y": 220,
         "wires": [
             []
@@ -2249,16 +2259,6 @@
             },
             {
                 "t": "eq",
-                "v": "Vehicle.Powertrain.FuelSystem.TimeSinceStart",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "Vehicle.IsMoving",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
                 "v": "Vehicle.OBD.FuelLevel",
                 "vt": "str"
             },
@@ -2279,23 +2279,30 @@
             },
             {
                 "t": "eq",
+                "v": "Vehicle.CurrentLocation.Altitude",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
                 "v": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 9,
-        "x": 610,
+        "outputs": 8,
+        "x": 550,
         "y": 260,
         "wires": [
             [
                 "147df8ed194c901d"
             ],
-            [],
-            [],
-            [],
-            [],
+            [
+                "c9428623b29f136d"
+            ],
+            [
+                "2665541502e5e3a3"
+            ],
             [
                 "9601e9879234a4fa"
             ],
@@ -2304,6 +2311,9 @@
             ],
             [
                 "3620e9b576ab598a"
+            ],
+            [
+                "a5bec8838d6b91fa"
             ],
             [
                 "a6f2972df18c311f"
@@ -2321,8 +2331,8 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "topic",
-        "x": 490,
-        "y": 260,
+        "x": 430,
+        "y": 220,
         "wires": [
             [
                 "7bd2591a5e21c6e9"
@@ -2333,36 +2343,36 @@
         "id": "b7175d3932e07f63",
         "type": "ui_worldmap",
         "z": "df00f52c34ea8f47",
-        "group": "97020d029d45d7c5",
+        "group": "b88a2b3cf1c2a472",
         "order": 0,
         "width": 0,
         "height": 0,
-        "name": "",
+        "name": "Map",
         "lat": "",
         "lon": "",
         "zoom": "",
-        "layer": "OSMC",
+        "layer": "OSMG",
         "cluster": "",
         "maxage": "",
         "usermenu": "hide",
-        "layers": "hide",
+        "layers": "show",
         "panit": "true",
-        "panlock": "true",
+        "panlock": "false",
         "zoomlock": "false",
         "hiderightclick": "true",
         "coords": "deg",
         "showgrid": "false",
         "showruler": "false",
         "allowFileDrop": "false",
-        "path": "/worldmap",
+        "path": "/map",
         "overlist": "DR,CO",
-        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "maplist": "OSMG,OSMC,EsriC,EsriS",
         "mapname": "",
         "mapurl": "",
         "mapopt": "",
         "mapwms": false,
-        "x": 1020,
-        "y": 480,
+        "x": 1010,
+        "y": 580,
         "wires": []
     },
     {
@@ -2373,11 +2383,11 @@
         "func": "const payload = flow.get(\"gps_data\")\n\nswitch (msg.topic) {\n    case \"Vehicle.CurrentLocation.Latitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lat = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Longitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lon = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Heading\":\n        if (!isNaN(msg.payload)) {\n            payload.heading = msg.payload\n        }\n        break\n    case \"Vehicle.Speed\":\n        if (!isNaN(msg.payload)) {\n            payload.speed = msg.payload\n        }\n        break\n}\n\nflow.set(\"gps_data\", payload)\nmsg.payload = payload\n\nreturn msg\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"gps_data\", {\n    name: \"Vehicle\",\n    icon: \"car\"\n})\n",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"gps_data\", {\n    name: \"Vehicle\",\n    icon: \"car\",\n    iconColor: \"#5d8dab\"\n})\n",
         "finalize": "",
         "libs": [],
-        "x": 850,
-        "y": 480,
+        "x": 970,
+        "y": 540,
         "wires": [
             [
                 "b7175d3932e07f63"
@@ -2388,13 +2398,14 @@
         "id": "9601e9879234a4fa",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 480,
+        "name": "GPS Latitude",
+        "x": 730,
+        "y": 340,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
+                "5fbefec64235a61f",
+                "32a49afc81ab7d75"
             ]
         ]
     },
@@ -2402,13 +2413,14 @@
         "id": "2a3940cd213d076e",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 520,
+        "name": "GPS Longitude",
+        "x": 740,
+        "y": 380,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
+                "5fbefec64235a61f",
+                "3a0496e5fa86037f"
             ]
         ]
     },
@@ -2416,13 +2428,14 @@
         "id": "3620e9b576ab598a",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 560,
+        "name": "GPS Heading",
+        "x": 740,
+        "y": 460,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
+                "5fbefec64235a61f",
+                "5b6496635035c834"
             ]
         ]
     },
@@ -2477,17 +2490,17 @@
         "links": [
             "5992af44a4bef7c8"
         ],
-        "x": 995,
-        "y": 400,
+        "x": 1045,
+        "y": 500,
         "wires": []
     },
     {
         "id": "a6f2972df18c311f",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 870,
-        "y": 400,
+        "name": "Seat Position",
+        "x": 730,
+        "y": 500,
         "wires": [
             [],
             [
@@ -2895,6 +2908,218 @@
                 "4c1d4bcd931bcca1"
             ]
         ]
+    },
+    {
+        "id": "32a49afc81ab7d75",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 2,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Latitude",
+        "format": "{{value ? (value | number:5) + ' °' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5b6496635035c834",
+        "type": "ui_gauge",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "97020d029d45d7c5",
+        "order": 1,
+        "width": "4",
+        "height": "4",
+        "gtype": "compass",
+        "title": "Heading",
+        "label": "°",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1000,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "3a0496e5fa86037f",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Longitude",
+        "format": "{{value ? (value | number:5) + ' °' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3a280a0ea188d23c",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 4,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Altitude",
+        "format": "{{value ? (value | number:0) + ' m' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a5bec8838d6b91fa",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "GPS Altitude",
+        "x": 730,
+        "y": 420,
+        "wires": [
+            [],
+            [
+                "5fbefec64235a61f",
+                "3a280a0ea188d23c"
+            ]
+        ]
+    },
+    {
+        "id": "94b286e3084a68e9",
+        "type": "ui_gauge",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "97020d029d45d7c5",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "wave",
+        "title": "Fuel Level",
+        "label": "%",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#e01b24",
+            "#00b500",
+            "#00b500"
+        ],
+        "seg1": "10",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 990,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "2665541502e5e3a3",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "Fuel Level",
+        "x": 730,
+        "y": 300,
+        "wires": [
+            [],
+            [
+                "94b286e3084a68e9"
+            ]
+        ]
+    },
+    {
+        "id": "12d793df46231615",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Vehicle.OBD.FuelLevel",
+        "payload": "42.0",
+        "payloadType": "num",
+        "x": 580,
+        "y": 780,
+        "wires": [
+            [
+                "f220d8ca3595f40f"
+            ]
+        ]
+    },
+    {
+        "id": "c9428623b29f136d",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "Distance",
+        "x": 720,
+        "y": 260,
+        "wires": [
+            [],
+            [
+                "5a4d97eb9d7b430a"
+            ]
+        ]
+    },
+    {
+        "id": "5a4d97eb9d7b430a",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 5,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Distance",
+        "format": "{{value ? (value | number:1) + ' km' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 260,
+        "wires": []
     },
     {
         "id": "7b1e0e7cf64109ab",
