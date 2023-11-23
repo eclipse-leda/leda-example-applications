@@ -23,31 +23,31 @@ import "google/protobuf/timestamp.proto";
 // These are mapped to sint32 and uint32 respectively.
 //
 enum DataType {
-  STRING          = 0;
-  BOOL            = 1;
-  INT8            = 2;
-  INT16           = 3;
-  INT32           = 4;
-  INT64           = 5;
-  UINT8           = 6;
-  UINT16          = 7;
-  UINT32          = 8;
-  UINT64          = 9;
-  FLOAT           = 10;
-  DOUBLE          = 11;
-  TIMESTAMP       = 12;
-  STRING_ARRAY    = 20;
-  BOOL_ARRAY      = 21;
-  INT8_ARRAY      = 22;
-  INT16_ARRAY     = 23;
-  INT32_ARRAY     = 24;
-  INT64_ARRAY     = 25;
-  UINT8_ARRAY     = 26;
-  UINT16_ARRAY    = 27;
-  UINT32_ARRAY    = 28;
-  UINT64_ARRAY    = 29;
-  FLOAT_ARRAY     = 30;
-  DOUBLE_ARRAY    = 31;
+  STRING       = 0;
+  BOOL         = 1;
+  INT8         = 2;
+  INT16        = 3;
+  INT32        = 4;
+  INT64        = 5;
+  UINT8        = 6;
+  UINT16       = 7;
+  UINT32       = 8;
+  UINT64       = 9;
+  FLOAT        = 10;
+  DOUBLE       = 11;
+  TIMESTAMP    = 12;
+  STRING_ARRAY = 20;
+  BOOL_ARRAY   = 21;
+  INT8_ARRAY   = 22;
+  INT16_ARRAY  = 23;
+  INT32_ARRAY  = 24;
+  INT64_ARRAY  = 25;
+  UINT8_ARRAY  = 26;
+  UINT16_ARRAY = 27;
+  UINT32_ARRAY = 28;
+  UINT64_ARRAY = 29;
+  FLOAT_ARRAY  = 30;
+  DOUBLE_ARRAY = 31;
   TIMESTAMP_ARRAY = 32;
 }
 
@@ -235,83 +235,4 @@ message GetMetadataReply {
   // doesn't exist (i.e. not known to the Data Broker) the corresponding
   // Metadata isn't part of the returned list.
   repeated Metadata list = 1;
-}
-
-service Collector {
-  // Register new datapoint (metadata)
-  //
-  // If the registration of at least one of the passed data point fails, the overall registration
-  // is rejected and the gRPC status code ABORTED is returned (to indicate the "aborted" registration).
-  // The details, which data point(s) caused the failure and the reason, is passed in back in human-
-  // readable form in the status message. Possible failure resaons are:
-  //  * PERMISSION_DENIED - Not allowed to register this name
-  //  * ALREADY_REGISTERED - The data point is already registered by some other feeder
-  //  * RE_REGISTRATION_MISMATCH - Already registered by this feeder but with differing metadata
-  //  * INVALID_NAME - The passed name of the datapoint has an invalid structure
-  //  * INVALID_VALUE_TYPE - The passed ValueType is not supported
-  //  * INVALID_CHANGE_TYPE - The passed ChangeType is not supported
-  rpc RegisterDatapoints(RegisterDatapointsRequest) returns (RegisterDatapointsReply);
-
-  // Provide a set of updated datapoint values to the broker.
-  // This is the unary equivalent of `StreamDatapoints` below and is better suited for cases
-  // where the frequency of updates is rather low.
-  //
-  // NOTE: The values provided in a single request are handled as a single update in the
-  // data broker. This ensures that any clients requesting (or subscribing to) a set of
-  // datapoints will get a consistent update, i.e. that either all values are updated or
-  // none are.
-  //
-  // Returns: any errors encountered updating the datapoints
-  //
-  rpc UpdateDatapoints(UpdateDatapointsRequest) returns (UpdateDatapointsReply);
-
-  // Provide a stream with updated datapoint values to the broker.
-  // This is the streaming equivalent of `UpdateDatapoints` above and is better suited for
-  // cases where the frequency of updates is high.
-  //
-  // NOTE: The values provided in a single request are handled as a single update in the
-  // data broker. This ensures that any clients requesting (or subscribing to) a set of
-  // datapoints will get a consistent update, i.e. that either all values are updated or
-  // none are.
-  //
-  // Returns: any errors encountered updating the datapoints
-  //
-  rpc StreamDatapoints(stream StreamDatapointsRequest) returns (stream StreamDatapointsReply);
-}
-
-message UpdateDatapointsRequest {
-  map<int32, Datapoint> datapoints = 1;
-}
-
-message UpdateDatapointsReply {
-  map<int32, DatapointError> errors = 1;  // If empty, everything went well
-}
-
-message StreamDatapointsRequest {
-  map<int32, Datapoint> datapoints = 1;
-}
-
-message StreamDatapointsReply {
-  map<int32, DatapointError> errors = 1;  // If empty, everything went well
-}
-
-message RegisterDatapointsRequest {
-  repeated RegistrationMetadata list = 1;
-}
-
-message RegistrationMetadata {
-  // Name of the data point
-  // (e.g. "Vehicle.Cabin.Seat.Row1.Pos1.Position" or "Vehicle.Speed")
-  string name            = 1;
-  DataType data_type     = 2;
-  string description     = 3;
-  ChangeType change_type = 4;
-
-  // int32             min_update_hz       = 10; // Only for CONTINUOUS
-  // int32             max_update_hz       = 11; // Only for CONTINUOUS
-};
-
-message RegisterDatapointsReply {
-  // Maps each data point name passed in RegisterDatapointsRequest to a data point id
-  map<string, int32> results = 1;
 }
