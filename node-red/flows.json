@@ -178,7 +178,7 @@
     {
         "id": "f486fb61943eeb89",
         "type": "subflow",
-        "name": "GetDatapoints",
+        "name": "Broker.GetDatapoints",
         "info": "# GetDatapoints\n\nRequest a set of datapoints (values)\n\nExpects `msg.payload` to contain an array with multiple VSS signal names or a string containing a single name.\n\nReturns an object containing all the requested datapoints as `msg.payload`.\nIf there is an error, `msg.error` is set to the error description.\n",
         "category": "SDV",
         "in": [
@@ -312,7 +312,7 @@
     {
         "id": "4f41580d2b2e81cf",
         "type": "subflow",
-        "name": "Subscribe",
+        "name": "Broker.Subscribe",
         "info": "",
         "category": "SDV",
         "in": [
@@ -328,7 +328,7 @@
         ],
         "out": [
             {
-                "x": 940,
+                "x": 920,
                 "y": 60,
                 "wires": [
                     {
@@ -338,7 +338,7 @@
                 ]
             },
             {
-                "x": 950,
+                "x": 930,
                 "y": 120,
                 "wires": [
                     {
@@ -363,7 +363,7 @@
         ],
         "icon": "node-red-contrib-grpc/grpc.svg",
         "status": {
-            "x": 980,
+            "x": 960,
             "y": 180,
             "wires": [
                 {
@@ -434,7 +434,7 @@
     {
         "id": "2a90df8a197fb8f2",
         "type": "subflow",
-        "name": "SetDatapoint",
+        "name": "Broker.SetDatapoint",
         "info": "",
         "category": "SDV",
         "in": [
@@ -484,6 +484,125 @@
             "wires": [
                 {
                     "id": "bbc19ba6b0c31177",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "194e312172a28c52",
+        "type": "subflow",
+        "name": "Broker.GetMetadata",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "b4a4fd3e5067bf61"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 940,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "dea6b502bbea41c8",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 930,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "2623110acbc23bc1",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "GetMetadata",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "outputLabels": [
+            "list",
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 960,
+            "y": 180,
+            "wires": [
+                {
+                    "id": "f93ed11c4a31355d",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "3ba7d7d5ee4707e1",
+        "type": "subflow",
+        "name": "VAL.Set",
+        "info": "",
+        "category": "SDV",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "edd6965ab2fc6f0b"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1290,
+                "y": 160,
+                "wires": [
+                    {
+                        "id": "b94efb2bff0d6e7d",
+                        "port": 0
+                    },
+                    {
+                        "id": "bf1747db2b73a08d",
+                        "port": 0
+                    },
+                    {
+                        "id": "17e5cf57d548e040",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "VAL.Set",
+            "license": "Apache-2.0"
+        },
+        "color": "#5d8dab",
+        "outputLabels": [
+            "error"
+        ],
+        "icon": "node-red-contrib-grpc/grpc.svg",
+        "status": {
+            "x": 1320,
+            "y": 100,
+            "wires": [
+                {
+                    "id": "2e011263cb6fa367",
                     "port": 0
                 }
             ]
@@ -661,7 +780,7 @@
         "id": "1f6dc92172f4e94b",
         "type": "grpc-server",
         "port": "${BROKER_PORT}",
-        "name": "leda-databroker",
+        "name": "leda sdv.databroker.v1",
         "server": "${BROKER_ADDR}",
         "protoFile": "/********************************************************************************\n * Copyright (c) 2022 Contributors to the Eclipse Foundation\n *\n * See the NOTICE file(s) distributed with this work for additional\n * information regarding copyright ownership.\n *\n * This program and the accompanying materials are made available under the\n * terms of the Apache License 2.0 which is available at\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * SPDX-License-Identifier: Apache-2.0\n ********************************************************************************/\n\nsyntax = \"proto3\";\n\npackage sdv.databroker.v1;\n\nimport \"google/protobuf/timestamp.proto\";\n\n// Data type of a signal\n//\n// Protobuf doesn't support int8, int16, uint8 or uint16.\n// These are mapped to sint32 and uint32 respectively.\n//\nenum DataType {\n  STRING          = 0;\n  BOOL            = 1;\n  INT8            = 2;\n  INT16           = 3;\n  INT32           = 4;\n  INT64           = 5;\n  UINT8           = 6;\n  UINT16          = 7;\n  UINT32          = 8;\n  UINT64          = 9;\n  FLOAT           = 10;\n  DOUBLE          = 11;\n  TIMESTAMP       = 12;\n  STRING_ARRAY    = 20;\n  BOOL_ARRAY      = 21;\n  INT8_ARRAY      = 22;\n  INT16_ARRAY     = 23;\n  INT32_ARRAY     = 24;\n  INT64_ARRAY     = 25;\n  UINT8_ARRAY     = 26;\n  UINT16_ARRAY    = 27;\n  UINT32_ARRAY    = 28;\n  UINT64_ARRAY    = 29;\n  FLOAT_ARRAY     = 30;\n  DOUBLE_ARRAY    = 31;\n  TIMESTAMP_ARRAY = 32;\n}\n\nenum DatapointError {\n  UNKNOWN_DATAPOINT = 0;\n  INVALID_TYPE      = 1;\n  ACCESS_DENIED     = 2;\n  INTERNAL_ERROR    = 3;\n  OUT_OF_BOUNDS     = 4;\n}\n\nenum EntryType {\n  ENTRY_TYPE_UNSPECIFIED = 0;\n  ENTRY_TYPE_SENSOR      = 1;\n  ENTRY_TYPE_ACTUATOR    = 2;\n  ENTRY_TYPE_ATTRIBUTE   = 3;\n}\n\nenum ChangeType {\n  STATIC    = 0;   // Value never changes\n  ON_CHANGE = 1;   // Updates are provided every time the value changes (i.e.\n                   // window is open / closed)\n  CONTINUOUS = 2;  // Value is updated continuously. Broker needs to tell\n                   // provider the preferred (update) frequency.\n}\n\nmessage StringArray {\n  repeated string values = 1;\n}\n\nmessage BoolArray {\n  repeated bool values = 1;\n}\n\nmessage Int32Array {\n  repeated sint32 values = 1;\n}\n\nmessage Int64Array {\n  repeated sint64 values = 1;\n}\n\nmessage Uint32Array {\n  repeated uint32 values = 1;\n}\n\nmessage Uint64Array {\n  repeated uint64 values = 1;\n}\n\nmessage FloatArray {\n  repeated float values = 1;\n}\n\nmessage DoubleArray {\n  repeated double values = 1;\n}\n\nmessage Datapoint {\n  // Timestamp of the value\n  google.protobuf.Timestamp timestamp = 1;\n\n  // values\n  oneof value {\n    Failure failure_value    = 10;\n    string string_value      = 11;\n    bool bool_value          = 12;\n    sint32 int32_value       = 13;\n    sint64 int64_value       = 14;\n    uint32 uint32_value      = 15;\n    uint64 uint64_value      = 16;\n    float float_value        = 17;\n    double double_value      = 18;\n    StringArray string_array = 21;\n    BoolArray bool_array     = 22;\n    Int32Array int32_array   = 23;\n    Int64Array int64_array   = 24;\n    Uint32Array uint32_array = 25;\n    Uint64Array uint64_array = 26;\n    FloatArray float_array   = 27;\n    DoubleArray double_array = 28;\n  }\n\n  enum Failure {\n    // The data point is known, but doesn't have a valid value\n    INVALID_VALUE = 0;\n    // The data point is known, but no value is available\n    NOT_AVAILABLE = 1;\n    // Unknown datapoint\n    UNKNOWN_DATAPOINT = 2;\n    // Access denied\n    ACCESS_DENIED = 3;\n    // Unexpected internal error\n    INTERNAL_ERROR = 4;\n  }\n}\n\nmessage Metadata {\n  // Id to be used in \"get\" and \"subscribe\" requests. Ids stay valid during\n  // one power cycle, only.\n  int32 id               = 1;\n  EntryType entry_type   = 2;\n  string name            = 4;\n  DataType data_type     = 5;\n  ChangeType change_type = 6;  // CONTINUOUS or STATIC or ON_CHANGE\n  string description     = 7;\n\n  // int32             min_update_hz       = 10; // Only for CONTINUOUS\n  // int32             max_update_hz       = 11; // Only for CONTINUOUS\n}\n\nservice Broker {\n  // Request a set of datapoints (values)\n  //\n  // Returns a list of requested data points.\n  //\n  // InvalidArgument is returned if the request is malformed.\n  rpc GetDatapoints(GetDatapointsRequest) returns (GetDatapointsReply);\n\n  // Set a datapoint (values)\n  rpc SetDatapoints(SetDatapointsRequest) returns (SetDatapointsReply);\n\n  // Subscribe to a set of data points or conditional expressions\n  // using the Data Broker Query Syntax (described in QUERY.md)\n  //\n  // Returns a stream of replies.\n  //\n  // InvalidArgument is returned if the request is malformed.\n  rpc Subscribe(SubscribeRequest) returns (stream SubscribeReply);\n\n  // Request the metadata of a set of datapoints\n  //\n  // Returns metadata of the requested data points that exist.\n  rpc GetMetadata(GetMetadataRequest) returns (GetMetadataReply);\n}\n\nmessage GetDatapointsRequest {\n  // A list of requested data points.\n  repeated string datapoints = 1;\n}\n\nmessage GetDatapointsReply {\n  // Contains the values of the requested data points.\n  // If a requested data point is not available, the corresponding Datapoint\n  // will have the respective failure value set.\n  map<string, Datapoint> datapoints = 1;\n}\n\nmessage SetDatapointsRequest {\n  // A map of data points to set\n  map<string, Datapoint> datapoints = 1;\n}\n\nmessage SetDatapointsReply {\n  // A map of errors (if any)\n  map<string, DatapointError> errors = 1;\n}\n\nmessage SubscribeRequest {\n  // Subscribe to a set of data points (or expressions) described\n  // by the provided query.\n  // The query syntax is a subset of SQL and is described in more\n  // detail in the QUERY.md file.\n  string query = 2;\n}\n\nmessage SubscribeReply {\n  // Contains the fields specified by the query.\n  // If a requested data point value is not available, the corresponding\n  // Datapoint will have it's respective failure value set.\n  map<string, Datapoint> fields = 1;\n}\n\nmessage GetMetadataRequest {\n  // Request metadata for a list of data points referenced by their names.\n  // e.g. \"Vehicle.Cabin.Seat.Row1.Pos1.Position\" or \"Vehicle.Speed\".\n  //\n  // If no names are provided, metadata for all known data points will be\n  // returned.\n  repeated string names = 1;\n}\n\nmessage GetMetadataReply {\n  // Contains metadata of the requested data points. If a data point\n  // doesn't exist (i.e. not known to the Data Broker) the corresponding\n  // Metadata isn't part of the returned list.\n  repeated Metadata list = 1;\n}",
         "ca": "",
@@ -675,7 +794,7 @@
     {
         "id": "6766a5d8d8a377ed",
         "type": "ui_tab",
-        "name": "VSS Example",
+        "name": "Dashboard Example",
         "icon": "dashboard",
         "order": 1,
         "disabled": false,
@@ -706,7 +825,7 @@
     {
         "id": "97020d029d45d7c5",
         "type": "ui_group",
-        "name": "GPS Data",
+        "name": "Misc. Data",
         "tab": "6766a5d8d8a377ed",
         "order": 2,
         "disp": false,
@@ -719,7 +838,7 @@
         "type": "ui_tab",
         "name": "VSS Control",
         "icon": "data_usage",
-        "order": 2,
+        "order": 3,
         "disabled": false,
         "hidden": false
     },
@@ -728,7 +847,7 @@
         "type": "ui_tab",
         "name": "Seat Adjuster",
         "icon": "airline_seat_recline_normal",
-        "order": 3,
+        "order": 2,
         "disabled": false,
         "hidden": false
     },
@@ -804,6 +923,44 @@
         "order": 4,
         "width": "12",
         "height": "1"
+    },
+    {
+        "id": "50d859dc3f14ad9a",
+        "type": "ui_group",
+        "name": "VSS Table",
+        "tab": "cb4c0e56e5211151",
+        "order": 3,
+        "disp": false,
+        "width": "24",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b88a2b3cf1c2a472",
+        "type": "ui_group",
+        "name": "GPS Map",
+        "tab": "6766a5d8d8a377ed",
+        "order": 3,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "81356b1220393dc3",
+        "type": "grpc-server",
+        "z": "3ba7d7d5ee4707e1",
+        "port": "${BROKER_PORT}",
+        "name": "leda kuksa.val.v1",
+        "server": "${BROKER_ADDR}",
+        "protoFile": "/********************************************************************************\n * Copyright (c) 2022 Contributors to the Eclipse Foundation\n *\n * See the NOTICE file(s) distributed with this work for additional\n * information regarding copyright ownership.\n *\n * This program and the accompanying materials are made available under the\n * terms of the Apache License 2.0 which is available at\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * SPDX-License-Identifier: Apache-2.0\n ********************************************************************************/\n\nsyntax = \"proto3\";\n\npackage kuksa.val.v1;\n\nimport \"google/protobuf/timestamp.proto\";\n\n// Describes a VSS entry\n// When requesting an entry, the amount of information returned can\n// be controlled by specifying either a `View` or a set of `Field`s.\nmessage DataEntry {\n  // Defines the full VSS path of the entry.\n  string path = 1;  // [field: FIELD_PATH]\n\n  // The value (datapoint)\n  Datapoint value = 2;  // [field: FIELD_VALUE]\n\n  // Actuator target (only used if the entry is an actuator)\n  Datapoint actuator_target = 3;  // [field: FIELD_ACTUATOR_TARGET]\n\n  // Metadata for this entry\n  Metadata metadata = 10;  // [field: FIELD_METADATA]\n}\n\nmessage Datapoint {\n  google.protobuf.Timestamp timestamp = 1;\n\n  oneof value {\n    string string            = 11;\n    bool bool                = 12;\n    sint32 int32             = 13;\n    sint64 int64             = 14;\n    uint32 uint32            = 15;\n    uint64 uint64            = 16;\n    float float              = 17;\n    double double            = 18;\n    StringArray string_array = 21;\n    BoolArray bool_array     = 22;\n    Int32Array int32_array   = 23;\n    Int64Array int64_array   = 24;\n    Uint32Array uint32_array = 25;\n    Uint64Array uint64_array = 26;\n    FloatArray float_array   = 27;\n    DoubleArray double_array = 28;\n  }\n}\n\nmessage Metadata {\n  // Data type\n  // The VSS data type of the entry (i.e. the value, min, max etc).\n  //\n  // NOTE: protobuf doesn't have int8, int16, uint8 or uint16 which means\n  // that these values must be serialized as int32 and uint32 respectively.\n  DataType data_type = 11;  // [field: FIELD_METADATA_DATA_TYPE]\n\n  // Entry type\n  EntryType entry_type = 12;  // [field: FIELD_METADATA_ENTRY_TYPE]\n\n  // Description\n  // Describes the meaning and content of the entry.\n  optional string description = 13;  // [field: FIELD_METADATA_DESCRIPTION]\n\n  // Comment [optional]\n  // A comment can be used to provide additional informal information\n  // on a entry.\n  optional string comment = 14;  // [field: FIELD_METADATA_COMMENT]\n\n  // Deprecation [optional]\n  // Whether this entry is deprecated. Can contain recommendations of what\n  // to use instead.\n  optional string deprecation = 15;  // [field: FIELD_METADATA_DEPRECATION]\n\n  // Unit [optional]\n  // The unit of measurement\n  optional string unit = 16;  // [field: FIELD_METADATA_UNIT]\n\n  // Value restrictions [optional]\n  // Restrict which values are allowed.\n  // Only restrictions matching the DataType {datatype} above are valid.\n  ValueRestriction value_restriction = 17;  // [field: FIELD_METADATA_VALUE_RESTRICTION]\n\n  // Entry type specific metadata\n  oneof entry_specific {\n    Actuator actuator   = 20;  // [field: FIELD_METADATA_ACTUATOR]\n    Sensor sensor       = 30;  // [field: FIELD_METADATA_SENSOR]\n    Attribute attribute = 40;  // [field: FIELD_METADATA_ATTRIBUTE]\n  }\n}\n\n///////////////////////\n// Actuator specific fields\nmessage Actuator {\n  // Nothing for now\n}\n\n////////////////////////\n// Sensor specific\nmessage Sensor {\n  // Nothing for now\n}\n\n////////////////////////\n// Attribute specific\nmessage Attribute {\n  // Nothing for now.\n}\n\n// Value restriction\n//\n// One ValueRestriction{type} for each type, since\n// they don't make sense unless the types match\n//\nmessage ValueRestriction {\n  oneof type {\n    ValueRestrictionString string = 21;\n    // For signed VSS integers\n    ValueRestrictionInt signed = 22;\n    // For unsigned VSS integers\n    ValueRestrictionUint unsigned = 23;\n    // For floating point VSS values (float and double)\n    ValueRestrictionFloat floating_point = 24;\n  }\n}\n\nmessage ValueRestrictionInt {\n  optional sint64 min            = 1;\n  optional sint64 max            = 2;\n  repeated sint64 allowed_values = 3;\n}\n\nmessage ValueRestrictionUint {\n  optional uint64 min            = 1;\n  optional uint64 max            = 2;\n  repeated uint64 allowed_values = 3;\n}\n\nmessage ValueRestrictionFloat {\n  optional double min = 1;\n  optional double max = 2;\n\n  // allowed for doubles/floats not recommended\n  repeated double allowed_values = 3;\n}\n\n// min, max doesn't make much sense for a string\nmessage ValueRestrictionString {\n  repeated string allowed_values = 3;\n}\n\n// VSS Data type of a signal\n//\n// Protobuf doesn't support int8, int16, uint8 or uint16.\n// These are mapped to int32 and uint32 respectively.\n//\nenum DataType {\n  DATA_TYPE_UNSPECIFIED     = 0;\n  DATA_TYPE_STRING          = 1;\n  DATA_TYPE_BOOLEAN         = 2;\n  DATA_TYPE_INT8            = 3;\n  DATA_TYPE_INT16           = 4;\n  DATA_TYPE_INT32           = 5;\n  DATA_TYPE_INT64           = 6;\n  DATA_TYPE_UINT8           = 7;\n  DATA_TYPE_UINT16          = 8;\n  DATA_TYPE_UINT32          = 9;\n  DATA_TYPE_UINT64          = 10;\n  DATA_TYPE_FLOAT           = 11;\n  DATA_TYPE_DOUBLE          = 12;\n  DATA_TYPE_TIMESTAMP       = 13;\n  DATA_TYPE_STRING_ARRAY    = 20;\n  DATA_TYPE_BOOLEAN_ARRAY   = 21;\n  DATA_TYPE_INT8_ARRAY      = 22;\n  DATA_TYPE_INT16_ARRAY     = 23;\n  DATA_TYPE_INT32_ARRAY     = 24;\n  DATA_TYPE_INT64_ARRAY     = 25;\n  DATA_TYPE_UINT8_ARRAY     = 26;\n  DATA_TYPE_UINT16_ARRAY    = 27;\n  DATA_TYPE_UINT32_ARRAY    = 28;\n  DATA_TYPE_UINT64_ARRAY    = 29;\n  DATA_TYPE_FLOAT_ARRAY     = 30;\n  DATA_TYPE_DOUBLE_ARRAY    = 31;\n  DATA_TYPE_TIMESTAMP_ARRAY = 32;\n}\n\n// Entry type\nenum EntryType {\n  ENTRY_TYPE_UNSPECIFIED = 0;\n  ENTRY_TYPE_ATTRIBUTE   = 1;\n  ENTRY_TYPE_SENSOR      = 2;\n  ENTRY_TYPE_ACTUATOR    = 3;\n}\n\n// A `View` specifies a set of fields which should\n// be populated in a `DataEntry` (in a response message)\nenum View {\n  VIEW_UNSPECIFIED   = 0;   // Unspecified. Equivalent to VIEW_CURRENT_VALUE unless `fields` are explicitly set.\n  VIEW_CURRENT_VALUE = 1;   // Populate DataEntry with value.\n  VIEW_TARGET_VALUE  = 2;   // Populate DataEntry with actuator target.\n  VIEW_METADATA      = 3;   // Populate DataEntry with metadata.\n  VIEW_FIELDS        = 10;  // Populate DataEntry only with requested fields.\n  VIEW_ALL           = 20;  // Populate DataEntry with everything.\n}\n\n// A `Field` corresponds to a specific field of a `DataEntry`.\n//\n// It can be used to:\n//   * populate only specific fields of a `DataEntry` response.\n//   * specify which fields of a `DataEntry` should be set as\n//     part of a `Set` request.\n//   * subscribe to only specific fields of a data entry.\n//   * convey which fields of an updated `DataEntry` have changed.\nenum Field {\n  FIELD_UNSPECIFIED                = 0;   // \"*\" i.e. everything\n  FIELD_PATH                       = 1;   // path\n  FIELD_VALUE                      = 2;   // value\n  FIELD_ACTUATOR_TARGET            = 3;   // actuator_target\n  FIELD_METADATA                   = 10;  // metadata.*\n  FIELD_METADATA_DATA_TYPE         = 11;  // metadata.data_type\n  FIELD_METADATA_DESCRIPTION       = 12;  // metadata.description\n  FIELD_METADATA_ENTRY_TYPE        = 13;  // metadata.entry_type\n  FIELD_METADATA_COMMENT           = 14;  // metadata.comment\n  FIELD_METADATA_DEPRECATION       = 15;  // metadata.deprecation\n  FIELD_METADATA_UNIT              = 16;  // metadata.unit\n  FIELD_METADATA_VALUE_RESTRICTION = 17;  // metadata.value_restriction.*\n  FIELD_METADATA_ACTUATOR          = 20;  // metadata.actuator.*\n  FIELD_METADATA_SENSOR            = 30;  // metadata.sensor.*\n  FIELD_METADATA_ATTRIBUTE         = 40;  // metadata.attribute.*\n}\n\n// Error response shall be an HTTP-like code.\n// Should follow https://www.w3.org/TR/viss2-transport/#status-codes.\nmessage Error {\n  uint32 code    = 1;\n  string reason  = 2;\n  string message = 3;\n}\n\n// Used in get/set requests to report errors for specific entries\nmessage DataEntryError {\n  string path = 1;  // vss path\n  Error error = 2;\n}\n\nmessage StringArray {\n  repeated string values = 1;\n}\n\nmessage BoolArray {\n  repeated bool values = 1;\n}\n\nmessage Int32Array {\n  repeated sint32 values = 1;\n}\n\nmessage Int64Array {\n  repeated sint64 values = 1;\n}\n\nmessage Uint32Array {\n  repeated uint32 values = 1;\n}\n\nmessage Uint64Array {\n  repeated uint64 values = 1;\n}\n\nmessage FloatArray {\n  repeated float values = 1;\n}\n\nmessage DoubleArray {\n  repeated double values = 1;\n}\n\n// Note on authorization:\n// Tokens (auth-token or auth-uuid) are sent as (GRPC / http2) metadata.\n//\n// The auth-token is a JWT compliant token as the examples found here:\n// https://github.com/eclipse/kuksa.val/tree/master/kuksa_certificates/jwt\n//\n// See also https://github.com/eclipse/kuksa.val/blob/master/doc/jwt.md\n//\n// Upon reception of auth-token, server shall generate an auth-uuid in metadata\n// that the client can use instead of auth-token in subsequent calls.\n\nservice VAL {\n  // Get entries\n  rpc Get(GetRequest) returns (GetResponse);\n\n  // Set entries\n  rpc Set(SetRequest) returns (SetResponse);\n\n  // Subscribe to a set of entries\n  //\n  // Returns a stream of notifications.\n  //\n  // InvalidArgument is returned if the request is malformed.\n  rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse);\n\n  // Shall return information that allows the client to determine\n  // what server/server implementation/version it is talking to\n  // eg. kuksa-databroker 0.5.1\n  rpc GetServerInfo(GetServerInfoRequest) returns (GetServerInfoResponse);\n}\n\n// Define which data we want\nmessage EntryRequest {\n  string path           = 1;\n  View view             = 2;\n  repeated Field fields = 3;\n}\n\n// Request a set of entries.\nmessage GetRequest {\n  repeated EntryRequest entries = 1;\n}\n\n// Global errors are specified in `error`.\n// Errors for individual entries are specified in `errors`.\nmessage GetResponse {\n  repeated DataEntry entries     = 1;\n  repeated DataEntryError errors = 2;\n  Error error                    = 3;\n}\n\n// Define the data we want to set\nmessage EntryUpdate {\n  DataEntry entry       = 1;\n  repeated Field fields = 2;\n}\n\n// A list of entries to be updated\nmessage SetRequest {\n  repeated EntryUpdate updates = 1;\n}\n\n// Global errors are specified in `error`.\n// Errors for individual entries are specified in `errors`.\nmessage SetResponse {\n  Error error                    = 1;\n  repeated DataEntryError errors = 2;\n}\n\n// Define what to subscribe to\nmessage SubscribeEntry {\n  string path           = 1;\n  View view             = 2;\n  repeated Field fields = 3;\n}\n\n// Subscribe to changes in datapoints.\nmessage SubscribeRequest {\n  repeated SubscribeEntry entries = 1;\n}\n\n// A subscription response\nmessage SubscribeResponse {\n  repeated EntryUpdate updates = 1;\n}\n\nmessage GetServerInfoRequest {\n  // Nothing yet\n}\n\nmessage GetServerInfoResponse {\n  string name    = 1;\n  string version = 2;\n}\n",
+        "ca": "",
+        "chain": "",
+        "key": "",
+        "mutualTls": false,
+        "ssl": false,
+        "selfsigned": false,
+        "localServer": false
     },
     {
         "id": "1ef13f666f02eb22",
@@ -1302,7 +1459,7 @@
         "method": "Subscribe",
         "chain": "",
         "key": "",
-        "x": 460,
+        "x": 440,
         "y": 60,
         "wires": [
             [
@@ -1350,7 +1507,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 790,
+        "x": 770,
         "y": 60,
         "wires": [
             []
@@ -1375,7 +1532,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 790,
+        "x": 770,
         "y": 120,
         "wires": [
             []
@@ -1392,7 +1549,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
+        "x": 630,
         "y": 180,
         "wires": [
             []
@@ -1413,7 +1570,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 650,
+        "x": 630,
         "y": 120,
         "wires": [
             [
@@ -1433,7 +1590,7 @@
         "septopics": true,
         "property": "payload",
         "topi": "topic",
-        "x": 650,
+        "x": 630,
         "y": 60,
         "wires": [
             [
@@ -1702,11 +1859,408 @@
         ]
     },
     {
+        "id": "a627b82e04b5df3e",
+        "type": "grpc-call",
+        "z": "194e312172a28c52",
+        "name": "RequestGetMetadata",
+        "server": "1f6dc92172f4e94b",
+        "service": "Broker",
+        "method": "GetMetadata",
+        "chain": "",
+        "key": "",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            [
+                "f93ed11c4a31355d",
+                "f4f7c4843e30e0a2",
+                "dea6b502bbea41c8"
+            ]
+        ]
+    },
+    {
+        "id": "b4a4fd3e5067bf61",
+        "type": "function",
+        "z": "194e312172a28c52",
+        "name": "GetMetadataRequest",
+        "func": "let names = msg.payload\n\nif (typeof msg.payload === \"string\") {\n    names = msg.payload.replace(/\\s+/g, ' ').split(\" \")\n}\n\nmsg.payload = {\n    names: names\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 60,
+        "wires": [
+            [
+                "a627b82e04b5df3e"
+            ]
+        ]
+    },
+    {
+        "id": "f93ed11c4a31355d",
+        "type": "function",
+        "z": "194e312172a28c52",
+        "name": "status",
+        "func": "const statusOk = {\n    fill: \"green\",\n    text: msg.payload.list.length ?? \"\"\n}\n\nconst statusError = {\n    fill: \"red\",\n    text: \"Error\"\n}\n\nmsg.payload = msg.error ? statusError : statusOk\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f4f7c4843e30e0a2",
+        "type": "switch",
+        "z": "194e312172a28c52",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 120,
+        "wires": [
+            [
+                "2623110acbc23bc1"
+            ]
+        ]
+    },
+    {
+        "id": "2623110acbc23bc1",
+        "type": "change",
+        "z": "194e312172a28c52",
+        "name": "error",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dea6b502bbea41c8",
+        "type": "change",
+        "z": "194e312172a28c52",
+        "name": "list",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.list",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7f44ba3d5f002ba6",
+        "type": "grpc-call",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "RequestSet",
+        "server": "81356b1220393dc3",
+        "service": "VAL",
+        "method": "Set",
+        "chain": "",
+        "key": "",
+        "x": 610,
+        "y": 60,
+        "wires": [
+            [
+                "2e011263cb6fa367",
+                "8211b0d84bf813a9",
+                "380d9fc26a2bb333"
+            ]
+        ]
+    },
+    {
+        "id": "edd6965ab2fc6f0b",
+        "type": "function",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "SetValueRequest",
+        "func": "const data_type = global.get('VSSMetaData')[msg.topic]?.data_type\nlet value_type = 'string'\n\ntry {\n    switch (data_type) {\n        case 'INT8':\n        case 'INT16':\n            value_type = 'int32'\n            break\n        case 'UINT8':\n        case 'UINT16':\n            value_type = 'uint32'\n            break\n        case 'INT8_ARRAY':\n        case 'INT16_ARRAY':\n            value_type = 'int32_array'\n            break\n        case 'UINT8_ARRAY':\n        case 'UINT16_ARRAY':\n            value_type = 'uint32_array'\n            break\n        default:\n            value_type = data_type.toLowerCase()\n    }\n\n    msg.payload = {\n        updates: [{\n            entry: {\n                path: msg.topic,\n                value: { [value_type]: msg.payload }\n            },\n            fields: [\n                2   // FIELD_VALUE\n            ]\n        }]\n    }\n}\ncatch {\n    msg.payload = null\n    msg.error = `ERROR: Invalid property name: \"${msg.topic}\"`\n}\n\nreturn msg\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 60,
+        "wires": [
+            [
+                "8211b0d84bf813a9",
+                "54adb30a50182477",
+                "2e011263cb6fa367"
+            ]
+        ]
+    },
+    {
+        "id": "2e011263cb6fa367",
+        "type": "function",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "error",
+        "func": "const statusOk = { fill: \"green\", text: \"\" }\nconst statusError = { fill: \"red\", text: \"Error\" }\n\nconst error = !!( msg.error || msg.payload.error || msg.payload.errors?.length)\nconst status = error ? statusError : statusOk\n\nreturn [\n    { payload: status },\n    { payload: error }\n]\n",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [],
+            [
+                "ce21f9ec137d4873"
+            ]
+        ]
+    },
+    {
+        "id": "8211b0d84bf813a9",
+        "type": "switch",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "error",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [
+                "bf1747db2b73a08d"
+            ]
+        ]
+    },
+    {
+        "id": "380d9fc26a2bb333",
+        "type": "switch",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "payload.errors",
+        "property": "payload.errors",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 800,
+        "y": 220,
+        "wires": [
+            [
+                "fd89b48a9faafd81"
+            ]
+        ]
+    },
+    {
+        "id": "bf1747db2b73a08d",
+        "type": "change",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "error",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1000,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fd89b48a9faafd81",
+        "type": "change",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.errors",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1000,
+        "y": 220,
+        "wires": [
+            [
+                "bbdb4611ec77e6e3"
+            ]
+        ]
+    },
+    {
+        "id": "bbdb4611ec77e6e3",
+        "type": "split",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 1150,
+        "y": 220,
+        "wires": [
+            [
+                "b94efb2bff0d6e7d"
+            ]
+        ]
+    },
+    {
+        "id": "ce21f9ec137d4873",
+        "type": "switch",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "payload false",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 790,
+        "y": 260,
+        "wires": [
+            [
+                "17e5cf57d548e040"
+            ]
+        ]
+    },
+    {
+        "id": "17e5cf57d548e040",
+        "type": "change",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1000,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b94efb2bff0d6e7d",
+        "type": "function",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "function 2",
+        "func": "msg.payload = `${msg.key}: ${msg.payload}`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "54adb30a50182477",
+        "type": "switch",
+        "z": "3ba7d7d5ee4707e1",
+        "name": "payload not null",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 60,
+        "wires": [
+            [
+                "7f44ba3d5f002ba6"
+            ]
+        ]
+    },
+    {
         "id": "aa13d953ce65705f",
         "type": "subflow:f486fb61943eeb89",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 460,
+        "x": 480,
         "y": 60,
         "wires": [
             [
@@ -1776,7 +2330,7 @@
         ],
         "outputs": 0,
         "cts": false,
-        "x": 900,
+        "x": 980,
         "y": 60,
         "wires": []
     },
@@ -1785,7 +2339,7 @@
         "type": "subflow:d2f09c088927a668",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 680,
+        "x": 760,
         "y": 60,
         "wires": [
             [
@@ -1888,7 +2442,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 660,
+        "x": 740,
         "y": 120,
         "wires": []
     },
@@ -1897,8 +2451,8 @@
         "type": "subflow:4f41580d2b2e81cf",
         "z": "df00f52c34ea8f47",
         "name": "",
-        "x": 300,
-        "y": 260,
+        "x": 330,
+        "y": 280,
         "wires": [
             [
                 "4b836e3a267014ae"
@@ -1923,10 +2477,10 @@
         "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "SELECT Vehicle.Speed, Vehicle.IsMoving, Vehicle.OBD.FuelLevel, Vehicle.TravelledDistance, Vehicle.Powertrain.FuelSystem.TimeSinceStart, Vehicle.CurrentLocation.Latitude, Vehicle.CurrentLocation.Longitude, Vehicle.Cabin.Seat.Row1.Pos1.Position",
+        "payload": "SELECT Vehicle.Speed, Vehicle.OBD.FuelLevel, Vehicle.TraveledDistance, Vehicle.CurrentLocation.Latitude, Vehicle.CurrentLocation.Longitude, Vehicle.CurrentLocation.Heading, Vehicle.CurrentLocation.Altitude, Vehicle.Cabin.Seat.Row1.Pos1.Position",
         "payloadType": "str",
         "x": 130,
-        "y": 260,
+        "y": 280,
         "wires": [
             [
                 "aa7e9b6ee7e2af8c"
@@ -1937,7 +2491,7 @@
         "id": "147df8ed194c901d",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
+        "name": "Speed",
         "env": [
             {
                 "name": "signal",
@@ -1945,14 +2499,13 @@
                 "type": "str"
             }
         ],
-        "x": 770,
-        "y": 180,
+        "x": 710,
+        "y": 220,
         "wires": [
             [],
             [
                 "ed41f34f4a925a32",
-                "53b8cdacd2594f26",
-                "5fbefec64235a61f"
+                "53b8cdacd2594f26"
             ]
         ]
     },
@@ -1980,7 +2533,7 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 960,
+        "x": 980,
         "y": 180,
         "wires": []
     },
@@ -2022,7 +2575,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 960,
+        "x": 980,
         "y": 220,
         "wires": [
             []
@@ -2043,17 +2596,7 @@
             },
             {
                 "t": "eq",
-                "v": "Vehicle.TravelledDistance",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "Vehicle.Powertrain.FuelSystem.TimeSinceStart",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "Vehicle.IsMoving",
+                "v": "Vehicle.TraveledDistance",
                 "vt": "str"
             },
             {
@@ -2078,23 +2621,30 @@
             },
             {
                 "t": "eq",
+                "v": "Vehicle.CurrentLocation.Altitude",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
                 "v": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 9,
-        "x": 610,
+        "outputs": 8,
+        "x": 550,
         "y": 260,
         "wires": [
             [
                 "147df8ed194c901d"
             ],
-            [],
-            [],
-            [],
-            [],
+            [
+                "c9428623b29f136d"
+            ],
+            [
+                "2665541502e5e3a3"
+            ],
             [
                 "9601e9879234a4fa"
             ],
@@ -2103,6 +2653,9 @@
             ],
             [
                 "3620e9b576ab598a"
+            ],
+            [
+                "a5bec8838d6b91fa"
             ],
             [
                 "a6f2972df18c311f"
@@ -2120,8 +2673,8 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "topic",
-        "x": 490,
-        "y": 260,
+        "x": 430,
+        "y": 220,
         "wires": [
             [
                 "7bd2591a5e21c6e9"
@@ -2132,36 +2685,36 @@
         "id": "b7175d3932e07f63",
         "type": "ui_worldmap",
         "z": "df00f52c34ea8f47",
-        "group": "97020d029d45d7c5",
+        "group": "b88a2b3cf1c2a472",
         "order": 0,
         "width": 0,
         "height": 0,
-        "name": "",
+        "name": "Map",
         "lat": "",
         "lon": "",
         "zoom": "",
-        "layer": "OSMC",
+        "layer": "OSMG",
         "cluster": "",
         "maxage": "",
         "usermenu": "hide",
-        "layers": "hide",
+        "layers": "show",
         "panit": "true",
-        "panlock": "true",
+        "panlock": "false",
         "zoomlock": "false",
         "hiderightclick": "true",
         "coords": "deg",
         "showgrid": "false",
         "showruler": "false",
         "allowFileDrop": "false",
-        "path": "/worldmap",
+        "path": "/map",
         "overlist": "DR,CO",
-        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "maplist": "OSMG,OSMC,EsriC,EsriS",
         "mapname": "",
         "mapurl": "",
         "mapopt": "",
         "mapwms": false,
-        "x": 1020,
-        "y": 480,
+        "x": 1010,
+        "y": 580,
         "wires": []
     },
     {
@@ -2172,11 +2725,11 @@
         "func": "const payload = flow.get(\"gps_data\")\n\nswitch (msg.topic) {\n    case \"Vehicle.CurrentLocation.Latitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lat = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Longitude\":\n        if (!isNaN(msg.payload)) {\n            payload.lon = msg.payload\n        }\n        break\n    case \"Vehicle.CurrentLocation.Heading\":\n        if (!isNaN(msg.payload)) {\n            payload.heading = msg.payload\n        }\n        break\n    case \"Vehicle.Speed\":\n        if (!isNaN(msg.payload)) {\n            payload.speed = msg.payload\n        }\n        break\n}\n\nflow.set(\"gps_data\", payload)\nmsg.payload = payload\n\nreturn msg\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"gps_data\", {\n    name: \"Vehicle\",\n    icon: \"car\"\n})\n",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"gps_data\", {\n    name: \"Vehicle\",\n    icon: \"car\",\n    iconColor: \"#5d8dab\"\n})\n",
         "finalize": "",
         "libs": [],
-        "x": 850,
-        "y": 480,
+        "x": 970,
+        "y": 540,
         "wires": [
             [
                 "b7175d3932e07f63"
@@ -2187,13 +2740,14 @@
         "id": "9601e9879234a4fa",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 480,
+        "name": "GPS Latitude",
+        "x": 730,
+        "y": 340,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
+                "5fbefec64235a61f",
+                "32a49afc81ab7d75"
             ]
         ]
     },
@@ -2201,13 +2755,14 @@
         "id": "2a3940cd213d076e",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 520,
+        "name": "GPS Longitude",
+        "x": 740,
+        "y": 380,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
+                "5fbefec64235a61f",
+                "3a0496e5fa86037f"
             ]
         ]
     },
@@ -2215,26 +2770,14 @@
         "id": "3620e9b576ab598a",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 560,
+        "name": "GPS Heading",
+        "x": 740,
+        "y": 460,
         "wires": [
             [],
             [
-                "5fbefec64235a61f"
-            ]
-        ]
-    },
-    {
-        "id": "f220d8ca3595f40f",
-        "type": "subflow:2a90df8a197fb8f2",
-        "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 630,
-        "y": 700,
-        "wires": [
-            [
-                "244d32831b583804"
+                "5fbefec64235a61f",
+                "5b6496635035c834"
             ]
         ]
     },
@@ -2257,13 +2800,13 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "Vehicle.Speed",
-        "payload": "123.45",
-        "payloadType": "str",
-        "x": 140,
-        "y": 700,
+        "payload": "234.5",
+        "payloadType": "num",
+        "x": 570,
+        "y": 720,
         "wires": [
             [
-                "f220d8ca3595f40f"
+                "5f2b6762144657b0"
             ]
         ]
     },
@@ -2276,17 +2819,17 @@
         "links": [
             "5992af44a4bef7c8"
         ],
-        "x": 995,
-        "y": 400,
+        "x": 1045,
+        "y": 500,
         "wires": []
     },
     {
         "id": "a6f2972df18c311f",
         "type": "subflow:f206c2b27c248139",
         "z": "df00f52c34ea8f47",
-        "name": "",
-        "x": 870,
-        "y": 400,
+        "name": "Seat Position",
+        "x": 730,
+        "y": 500,
         "wires": [
             [],
             [
@@ -2319,32 +2862,6 @@
         "wires": [
             [
                 "c6c7658543aee121"
-            ]
-        ]
-    },
-    {
-        "id": "e795cb05db09f7eb",
-        "type": "ui_text_input",
-        "z": "df00f52c34ea8f47",
-        "name": "signal",
-        "label": "Signal Name",
-        "tooltip": "",
-        "group": "efe3a0ea76c51e04",
-        "order": 1,
-        "width": "12",
-        "height": "1",
-        "passthru": true,
-        "mode": "text",
-        "delay": 300,
-        "topic": "topic",
-        "sendOnBlur": true,
-        "className": "",
-        "topicType": "msg",
-        "x": 90,
-        "y": 560,
-        "wires": [
-            [
-                "5cd8f2bd98d5bac5"
             ]
         ]
     },
@@ -2393,7 +2910,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 300,
+        "x": 320,
         "y": 560,
         "wires": [
             []
@@ -2418,7 +2935,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 310,
+        "x": 330,
         "y": 600,
         "wires": [
             []
@@ -2450,11 +2967,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 240,
+        "x": 260,
         "y": 640,
         "wires": [
             [
-                "f220d8ca3595f40f"
+                "5f2b6762144657b0"
             ]
         ]
     },
@@ -2475,9 +2992,505 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 800,
-        "y": 700,
+        "x": 1000,
+        "y": 640,
         "wires": []
+    },
+    {
+        "id": "1754e21b1c3c2bca",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "Query Names",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "null",
+        "payloadType": "json",
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "2c2df834976563c7"
+            ]
+        ]
+    },
+    {
+        "id": "2c2df834976563c7",
+        "type": "subflow:194e312172a28c52",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "166ad9257a785bb9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8ecd7b3bc1e9518a",
+        "type": "ui_dropdown",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "label": "Signal Name",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "efe3a0ea76c51e04",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 110,
+        "y": 560,
+        "wires": [
+            [
+                "5cd8f2bd98d5bac5"
+            ]
+        ]
+    },
+    {
+        "id": "6aa833ba5804926b",
+        "type": "change",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "options",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "8ecd7b3bc1e9518a"
+            ]
+        ]
+    },
+    {
+        "id": "8b01be1c8895f838",
+        "type": "ui_table",
+        "z": "df00f52c34ea8f47",
+        "group": "50d859dc3f14ad9a",
+        "name": "VSS Table",
+        "order": 2,
+        "width": "24",
+        "height": "12",
+        "columns": [
+            {
+                "field": "name",
+                "title": "Name",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "desc",
+                "title": "Description",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "data_type",
+                "title": "Type",
+                "width": "16%",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 270,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "4f774d5bf32b8277",
+        "type": "split",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 90,
+        "y": 720,
+        "wires": [
+            [
+                "fd30e33117aebd98"
+            ]
+        ]
+    },
+    {
+        "id": "4c1d4bcd931bcca1",
+        "type": "join",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 90,
+        "y": 780,
+        "wires": [
+            [
+                "8b01be1c8895f838"
+            ]
+        ]
+    },
+    {
+        "id": "166ad9257a785bb9",
+        "type": "function",
+        "z": "df00f52c34ea8f47",
+        "name": "create lists",
+        "func": "const sorted_payload = msg.payload.sort((a, b) => {\n     return a.name > b.name ? 1 : a.name < b.name ? -1 : 0\n})\n\nconst metadata = msg.payload.reduce(\n     (obj, entry) => {\n          return { ...obj, [entry.name]: entry }\n     },\n     {}\n)\n\nglobal.set(\"VSSMetaData\", metadata)\n\nreturn [\n     { payload: metadata },\n     { payload: Object.keys(metadata) }\n]\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 400,
+        "wires": [
+            [
+                "4f774d5bf32b8277"
+            ],
+            [
+                "6aa833ba5804926b"
+            ]
+        ],
+        "outputLabels": [
+            "MetaData",
+            "SignalList"
+        ]
+    },
+    {
+        "id": "fd30e33117aebd98",
+        "type": "function",
+        "z": "df00f52c34ea8f47",
+        "name": "metadata ⇒ table",
+        "func": "const name = `<span title=\"${msg.payload.description}\">${msg.payload.name}</span>`\n\nmsg.payload = {\n    name: name,\n    desc: msg.payload.description,\n    data_type: msg.payload.data_type\n}\n\nreturn msg\n\n// icon_name: msg.payload[msg.payload.value] === \"UNKNOWN_DATAPOINT\" ? \"error\" : \"\",\n// Type: msg.payload.value\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 720,
+        "wires": [
+            [
+                "4c1d4bcd931bcca1"
+            ]
+        ]
+    },
+    {
+        "id": "32a49afc81ab7d75",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 2,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Latitude",
+        "format": "{{value ? (value | number:5) + ' °' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5b6496635035c834",
+        "type": "ui_gauge",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "97020d029d45d7c5",
+        "order": 1,
+        "width": "4",
+        "height": "4",
+        "gtype": "compass",
+        "title": "Heading",
+        "label": "°",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1000,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "3a0496e5fa86037f",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Longitude",
+        "format": "{{value ? (value | number:5) + ' °' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3a280a0ea188d23c",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 4,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Altitude",
+        "format": "{{value ? (value | number:0) + ' m' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a5bec8838d6b91fa",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "GPS Altitude",
+        "x": 730,
+        "y": 420,
+        "wires": [
+            [],
+            [
+                "5fbefec64235a61f",
+                "3a280a0ea188d23c"
+            ]
+        ]
+    },
+    {
+        "id": "94b286e3084a68e9",
+        "type": "ui_gauge",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "group": "97020d029d45d7c5",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "wave",
+        "title": "Fuel Level",
+        "label": "%",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#e01b24",
+            "#00b500",
+            "#00b500"
+        ],
+        "seg1": "10",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 990,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "2665541502e5e3a3",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "Fuel Level",
+        "x": 730,
+        "y": 300,
+        "wires": [
+            [],
+            [
+                "94b286e3084a68e9"
+            ]
+        ]
+    },
+    {
+        "id": "12d793df46231615",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "Vehicle.OBD.FuelLevel Random",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Vehicle.OBD.FuelLevel",
+        "payload": "$random() * 100",
+        "payloadType": "jsonata",
+        "x": 610,
+        "y": 760,
+        "wires": [
+            [
+                "5f2b6762144657b0"
+            ]
+        ]
+    },
+    {
+        "id": "c9428623b29f136d",
+        "type": "subflow:f206c2b27c248139",
+        "z": "df00f52c34ea8f47",
+        "name": "Distance",
+        "x": 720,
+        "y": 260,
+        "wires": [
+            [],
+            [
+                "5a4d97eb9d7b430a"
+            ]
+        ]
+    },
+    {
+        "id": "5a4d97eb9d7b430a",
+        "type": "ui_text",
+        "z": "df00f52c34ea8f47",
+        "group": "97020d029d45d7c5",
+        "order": 5,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Distance",
+        "format": "{{value ? (value | number:1) + ' km' : 'n/a'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5f2b6762144657b0",
+        "type": "subflow:3ba7d7d5ee4707e1",
+        "z": "df00f52c34ea8f47",
+        "name": "",
+        "x": 710,
+        "y": 640,
+        "wires": [
+            [
+                "244d32831b583804"
+            ]
+        ]
+    },
+    {
+        "id": "0724d7b8e8eb6333",
+        "type": "inject",
+        "z": "df00f52c34ea8f47",
+        "name": "Vehicle.CurrentLocation.Heading Random",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Vehicle.CurrentLocation.Heading",
+        "payload": "$random() * 360",
+        "payloadType": "jsonata",
+        "x": 640,
+        "y": 800,
+        "wires": [
+            [
+                "5f2b6762144657b0"
+            ]
+        ]
     },
     {
         "id": "7b1e0e7cf64109ab",
